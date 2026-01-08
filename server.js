@@ -49,10 +49,23 @@ const upload = multer({
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// Serve static files from current directory
-app.use(express.static(__dirname));
+
+// Serve static files (CSS, JS, images) - MUST be before routes
+// In Vercel, this ensures static files are served correctly
+app.use(express.static(__dirname, {
+  index: false,
+  dotfiles: 'ignore',
+  etag: true,
+  lastModified: true,
+  maxAge: '1d'
+}));
+
 // Serve uploaded files
-app.use('/uploads', express.static(uploadsDir));
+app.use('/uploads', express.static(uploadsDir, {
+  etag: true,
+  lastModified: true,
+  maxAge: '7d'
+}));
 
 // Initialize Firebase Admin
 if (admin.apps.length === 0) {
@@ -1157,21 +1170,33 @@ app.post('/api/admin/upload-product-images', upload.array('files', 20), async (r
 // ========== SERVE STATIC FILES ==========
 // Serve HTML files - must be after API routes but before catch-all
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  const indexPath = path.join(__dirname, 'index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error('Error sending index.html:', err);
+      res.status(500).send('Error loading page');
+    }
+  });
 });
 
 // Serve HTML pages - exclude static file extensions
 app.get('/:page', (req, res, next) => {
   const page = req.params.page;
   
-  // Skip if it's a static file (CSS, JS, images, etc.)
-  const staticExtensions = ['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.eot', '.json', '.xml', '.txt'];
+  // IMPORTANT: Skip if it's a static file (CSS, JS, images, etc.)
+  // This allows express.static to handle these files
+  const staticExtensions = ['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.eot', '.json', '.xml', '.txt', '.map'];
   if (staticExtensions.some(ext => page.toLowerCase().endsWith(ext))) {
     return next(); // Let express.static handle it
   }
   
   // Skip API routes
-  if (page.startsWith('api/')) {
+  if (page.startsWith('api/') || page === 'api') {
+    return next();
+  }
+  
+  // Skip uploads
+  if (page.startsWith('uploads/')) {
     return next();
   }
   
@@ -1184,13 +1209,26 @@ app.get('/:page', (req, res, next) => {
   
   if (validPages.includes(page) || page.endsWith('.html')) {
     const filePath = path.join(__dirname, page);
-    if (fs.existsSync(filePath)) {
-      res.sendFile(filePath);
+    // Check if file exists (for Vercel compatibility)
+    if (fs.existsSync && fs.existsSync(filePath)) {
+      res.sendFile(filePath, (err) => {
+        if (err) {
+          console.error(`Error sending ${page}:`, err);
+          res.status(500).send('Error loading page');
+        }
+      });
     } else {
-      res.status(404).send('Page not found');
+      // In Vercel, fs.existsSync might not work, try to send anyway
+      res.sendFile(filePath, (err) => {
+        if (err) {
+          console.error(`File not found: ${page}`);
+          res.status(404).send('Page not found');
+        }
+      });
     }
   } else {
-    next(); // Let express.static handle other files
+    // Let express.static handle other files
+    next();
   }
 });
 
