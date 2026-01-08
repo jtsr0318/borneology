@@ -10,10 +10,17 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// For Vercel, use process.cwd() instead of __dirname
+const baseDir = process.env.VERCEL ? process.cwd() : __dirname;
+
 // Create uploads directory if it doesn't exist
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+const uploadsDir = path.join(baseDir, 'uploads');
+if (fs.existsSync && !fs.existsSync(uploadsDir)) {
+  try {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  } catch (err) {
+    console.warn('Could not create uploads directory:', err.message);
+  }
 }
 
 // Configure multer for file uploads
@@ -51,8 +58,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files (CSS, JS, images) - MUST be before routes
-// In Vercel, this ensures static files are served correctly
-app.use(express.static(__dirname, {
+// In Vercel, use baseDir (process.cwd() or __dirname)
+app.use(express.static(baseDir, {
   index: false,
   dotfiles: 'ignore',
   etag: true,
@@ -1170,11 +1177,24 @@ app.post('/api/admin/upload-product-images', upload.array('files', 20), async (r
 // ========== SERVE STATIC FILES ==========
 // Serve HTML files - must be after API routes but before catch-all
 app.get('/', (req, res) => {
-  const indexPath = path.join(__dirname, 'index.html');
+  // For Vercel, use process.cwd() instead of __dirname
+  const baseDir = process.env.VERCEL ? process.cwd() : __dirname;
+  const indexPath = path.join(baseDir, 'index.html');
   res.sendFile(indexPath, (err) => {
     if (err) {
       console.error('Error sending index.html:', err);
-      res.status(500).send('Error loading page');
+      // Try alternative path for Vercel
+      if (process.env.VERCEL) {
+        const altPath = path.join(process.cwd(), 'index.html');
+        res.sendFile(altPath, (altErr) => {
+          if (altErr) {
+            console.error('Alternative path also failed:', altErr);
+            res.status(500).send('Error loading page');
+          }
+        });
+      } else {
+        res.status(500).send('Error loading page');
+      }
     }
   });
 });
@@ -1208,24 +1228,28 @@ app.get('/:page', (req, res, next) => {
                       'seller-tutorial.html', 'test-firebase.html', 'test-admin-access.html'];
   
   if (validPages.includes(page) || page.endsWith('.html')) {
-    const filePath = path.join(__dirname, page);
-    // Check if file exists (for Vercel compatibility)
-    if (fs.existsSync && fs.existsSync(filePath)) {
-      res.sendFile(filePath, (err) => {
-        if (err) {
-          console.error(`Error sending ${page}:`, err);
-          res.status(500).send('Error loading page');
-        }
-      });
-    } else {
-      // In Vercel, fs.existsSync might not work, try to send anyway
-      res.sendFile(filePath, (err) => {
-        if (err) {
-          console.error(`File not found: ${page}`);
+    // For Vercel, use process.cwd() instead of __dirname
+    const baseDir = process.env.VERCEL ? process.cwd() : __dirname;
+    const filePath = path.join(baseDir, page);
+    
+    // Try to send file
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error(`Error sending ${page}:`, err);
+        // Try alternative path for Vercel
+        if (process.env.VERCEL) {
+          const altPath = path.join(process.cwd(), page);
+          res.sendFile(altPath, (altErr) => {
+            if (altErr) {
+              console.error(`File not found: ${page}`, altErr);
+              res.status(404).send('Page not found');
+            }
+          });
+        } else {
           res.status(404).send('Page not found');
         }
-      });
-    }
+      }
+    });
   } else {
     // Let express.static handle other files
     next();
