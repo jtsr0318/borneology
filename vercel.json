@@ -2,6 +2,18 @@
   "version": 2,
   "routes": [
     {
+      "src": "/api/test",
+      "dest": "api/test.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "api/index.js"
+    },
+    {
+      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json|xml|txt|html))",
+      "dest": "/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "api/index.js"
     }
