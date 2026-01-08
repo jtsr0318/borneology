@@ -1199,8 +1199,18 @@ app.post('/api/admin/upload-product-images', upload.array('files', 20), async (r
 });
 
 // ========== SERVE STATIC FILES ==========
-// Serve HTML files - must be after API routes but before catch-all
-app.get('/', (req, res) => {
+// CRITICAL: Static file middleware MUST be before all routes
+// Static files are already set up above, so we just need to serve HTML
+
+// Serve HTML files - must be after API routes but static files are already handled
+app.get('/', (req, res, next) => {
+  // Check if this is actually a static file request that was routed here
+  const url = req.url;
+  const staticExtensions = ['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.eot', '.json', '.xml', '.txt', '.map', '.webp'];
+  if (staticExtensions.some(ext => url.toLowerCase().endsWith(ext))) {
+    return next(); // Let express.static handle it
+  }
+  
   try {
     // For Vercel, use process.cwd() instead of __dirname
     const baseDir = process.env.VERCEL ? process.cwd() : __dirname;
