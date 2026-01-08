@@ -59,6 +59,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files (CSS, JS, images) - MUST be before routes
 // In Vercel, use baseDir (process.cwd() or __dirname)
+console.log('Setting up static file serving from:', baseDir);
+console.log('process.cwd():', process.cwd());
+console.log('__dirname:', __dirname);
+
 app.use(express.static(baseDir, {
   index: false,
   dotfiles: 'ignore',
@@ -66,6 +70,18 @@ app.use(express.static(baseDir, {
   lastModified: true,
   maxAge: '1d'
 }));
+
+// For Vercel, also serve from process.cwd() if different
+if (process.env.VERCEL && baseDir !== process.cwd()) {
+  console.log('Also serving static files from process.cwd():', process.cwd());
+  app.use(express.static(process.cwd(), {
+    index: false,
+    dotfiles: 'ignore',
+    etag: true,
+    lastModified: true,
+    maxAge: '1d'
+  }));
+}
 
 // Serve uploaded files
 app.use('/uploads', express.static(uploadsDir, {
@@ -1177,26 +1193,48 @@ app.post('/api/admin/upload-product-images', upload.array('files', 20), async (r
 // ========== SERVE STATIC FILES ==========
 // Serve HTML files - must be after API routes but before catch-all
 app.get('/', (req, res) => {
-  // For Vercel, use process.cwd() instead of __dirname
-  const baseDir = process.env.VERCEL ? process.cwd() : __dirname;
-  const indexPath = path.join(baseDir, 'index.html');
-  res.sendFile(indexPath, (err) => {
-    if (err) {
-      console.error('Error sending index.html:', err);
-      // Try alternative path for Vercel
-      if (process.env.VERCEL) {
-        const altPath = path.join(process.cwd(), 'index.html');
-        res.sendFile(altPath, (altErr) => {
-          if (altErr) {
-            console.error('Alternative path also failed:', altErr);
-            res.status(500).send('Error loading page');
+  try {
+    // For Vercel, use process.cwd() instead of __dirname
+    const baseDir = process.env.VERCEL ? process.cwd() : __dirname;
+    const indexPath = path.join(baseDir, 'index.html');
+    
+    console.log('Serving index.html from:', indexPath);
+    console.log('process.cwd():', process.cwd());
+    console.log('__dirname:', __dirname);
+    console.log('VERCEL env:', process.env.VERCEL);
+    
+    res.sendFile(indexPath, (err) => {
+      if (err) {
+        console.error('Error sending index.html:', err);
+        console.error('Attempted path:', indexPath);
+        // Try alternative paths for Vercel
+        const altPaths = [
+          path.join(process.cwd(), 'index.html'),
+          path.join(__dirname, 'index.html'),
+          path.join(process.cwd(), '..', 'index.html')
+        ];
+        
+        let tried = 0;
+        const tryNext = () => {
+          if (tried >= altPaths.length) {
+            res.status(500).send(`Error loading page. Tried: ${indexPath}`);
+            return;
           }
-        });
-      } else {
-        res.status(500).send('Error loading page');
+          const altPath = altPaths[tried++];
+          console.log('Trying alternative path:', altPath);
+          res.sendFile(altPath, (altErr) => {
+            if (altErr) {
+              tryNext();
+            }
+          });
+        };
+        tryNext();
       }
-    }
-  });
+    });
+  } catch (error) {
+    console.error('Fatal error in / route:', error);
+    res.status(500).send('Server error: ' + error.message);
+  }
 });
 
 // Serve HTML pages - exclude static file extensions
