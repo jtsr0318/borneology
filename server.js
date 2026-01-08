@@ -1155,22 +1155,42 @@ app.post('/api/admin/upload-product-images', upload.array('files', 20), async (r
 });
 
 // ========== SERVE STATIC FILES ==========
-// Serve HTML files
+// Serve HTML files - must be after API routes but before catch-all
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get('/:page', (req, res) => {
+// Serve HTML pages - exclude static file extensions
+app.get('/:page', (req, res, next) => {
   const page = req.params.page;
+  
+  // Skip if it's a static file (CSS, JS, images, etc.)
+  const staticExtensions = ['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.eot', '.json', '.xml', '.txt'];
+  if (staticExtensions.some(ext => page.toLowerCase().endsWith(ext))) {
+    return next(); // Let express.static handle it
+  }
+  
+  // Skip API routes
+  if (page.startsWith('api/')) {
+    return next();
+  }
+  
+  // Serve HTML files
   const validPages = ['index.html', 'shop.html', 'wishlist.html', 'checkout.html', 
                       'profile.html', 'contact.html', 'login.html', 'track-order.html', 
                       'product-rattan-bag.html', 'product-detail.html', 'seller-dashboard.html', 'seller-application.html',
                       'admin-dashboard.html', 'upload-product-images.html', 
-                      'admin-dashboard.html', 'seller-tutorial.html', 'test-firebase.html'];
+                      'seller-tutorial.html', 'test-firebase.html', 'test-admin-access.html'];
+  
   if (validPages.includes(page) || page.endsWith('.html')) {
-    res.sendFile(__dirname + '/' + page);
+    const filePath = path.join(__dirname, page);
+    if (fs.existsSync(filePath)) {
+      res.sendFile(filePath);
+    } else {
+      res.status(404).send('Page not found');
+    }
   } else {
-    res.status(404).send('Page not found');
+    next(); // Let express.static handle other files
   }
 });
 
