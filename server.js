@@ -78,7 +78,16 @@ staticPaths.forEach((staticPath, index) => {
     dotfiles: 'ignore',
     etag: true,
     lastModified: true,
-    maxAge: '1d'
+    maxAge: '1d',
+    setHeaders: (res, filePath) => {
+      // Set correct MIME types to prevent text/html errors
+      const ext = path.extname(filePath).toLowerCase();
+      if (ext === '.js') {
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+      } else if (ext === '.css') {
+        res.setHeader('Content-Type', 'text/css; charset=utf-8');
+      }
+    }
   }));
 });
 
@@ -1242,9 +1251,14 @@ app.get('/:page', (req, res, next) => {
   
   // IMPORTANT: Skip if it's a static file (CSS, JS, images, etc.)
   // This allows express.static to handle these files
-  const staticExtensions = ['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.eot', '.json', '.xml', '.txt', '.map'];
-  if (staticExtensions.some(ext => page.toLowerCase().endsWith(ext))) {
-    return next(); // Let express.static handle it
+  const staticExtensions = ['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.woff', '.woff2', '.ttf', '.eot', '.json', '.xml', '.txt', '.map', '.webp'];
+  
+  // Check if it's a static file
+  const isStaticFile = staticExtensions.some(ext => page.toLowerCase().endsWith(ext));
+  
+  if (isStaticFile) {
+    // Let express.static handle it - don't interfere
+    return next();
   }
   
   // Skip API routes
