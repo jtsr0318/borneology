@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seller Tutorial – Borneology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="hornbill.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .tutorial-hero {
+      background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(184,122,74,0.1));
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .tutorial-hero h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 2.5rem;
+      color: var(--tone-dark);
+      margin-bottom: 1rem;
+    }
+    .tutorial-step {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-glass);
+    }
+    .tutorial-step h3 {
+      font-family: "Playfair Display", serif;
+      color: var(--tone-dark);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .step-number {
+      background: linear-gradient(135deg, var(--tone-mid), var(--tone-dark));
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    .tutorial-step p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 0.5rem;
+    }
+    .tutorial-step ul {
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-left: 1.5rem;
+    }
+    .tutorial-step .highlight {
+      background: rgba(184,122,74,0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+      color: var(--tone-dark);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="motif-strip"></div>
+    <div class="container">
+      <div class="nav">
+        <div class="nav-left">
+          <a class="logo" href="index.html">
+            <div class="logo-icon"></div>
+            <div>
+              <div class="logo-text-main">Borneology</div>
+              <div class="logo-text-sub">Sarawak Handicrafts</div>
+            </div>
+          </a>
+          <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop Now</a>
+            <a href="contact.html">Contact</a>
+          </nav>
+        </div>
+        
+        <div class="nav-utility">
+          <button class="icon-btn" data-counter="wishlist" id="wishlistBtn">♡<span>0</span></button>
+          <button class="icon-btn" data-counter="cart" id="cartBtn">🛒<span>0</span></button>
+          <div class="profile-trigger" id="profileTrigger">
+            <img src="" alt="Profile" id="navAvatar" />
+            <span>Profile</span>
+          </div>
+          <button class="menu-toggle" id="menuToggle">Menu</button>
+        </div>
+      </div>
+      
+      <div class="profile-menu" id="profileMenu">
+        <a href="profile.html">My profile</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="checkout.html">Checkout</a>
+        <a href="login.html">Login / Logout</a>
+      </div>
+      
+      <nav class="nav-drawer" id="navDrawer">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop Now</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="container">
+        <div class="tutorial-hero">
+          <h1>🎉 Welcome to Seller Dashboard!</h1>
+          <p style="color:var(--text-muted); font-size:1.1rem; max-width:700px; margin:0 auto;">
+            Congratulations on becoming a verified seller! This quick guide will help you get started with selling your handcrafted products on Borneology.
+          </p>
+        </div>
+
+        <div class="tutorial-step">
+          <h3>
+            <span class="step-number">1</span>
+            Access Your Seller Dashboard
+          </h3>
+          <p>Navigate to your Seller Dashboard from your profile menu or click the button below.</p>
+          <div class="highlight">📦 Seller Dashboard → Manage all your products and orders</div>
+          <p>You can access it anytime from your profile dropdown menu.</p>
+        </div>
+
+        <div class="tutorial-step">
+          <h3>
+            <span class="step-number">2</span>
+            Add Your First Product
+          </h3>
+          <p>In the Seller Dashboard, you'll find a product form. Here's how to add a product:</p>
+          <ul>
+            <li><strong>Product Name:</strong> Give your product a clear, descriptive name</li>
+            <li><strong>Price:</strong> Set the price in Malaysian Ringgit (RM)</li>
+            <li><strong>Category:</strong> Choose the appropriate category (Textile, Bag/Weave, Wood Carving, Beads, or Other)</li>
+            <li><strong>Stock Quantity:</strong> Enter how many items you have available</li>
+            <li><strong>Description:</strong> Write a detailed description of your product</li>
+            <li><strong>Product Image:</strong> Upload a high-quality photo (JPG/PNG, max 5MB)</li>
+          </ul>
+          <div class="highlight">💡 Tip: Use clear, well-lit photos that showcase your craftsmanship!</div>
+        </div>
+
+        <div class="tutorial-step">
+          <h3>
+            <span class="step-number">3</span>
+            Manage Your Products
+          </h3>
+          <p>In the Products tab, you can:</p>
+          <ul>
+            <li>View all your listed products</li>
+            <li>Edit product details (click "Edit" button)</li>
+            <li>Update stock quantities</li>
+            <li>Delete products that are no longer available</li>
+          </ul>
+          <p>Keep your product information up-to-date to ensure smooth transactions.</p>
+        </div>
+
+        <div class="tutorial-step">
+          <h3>
+            <span class="step-number">4</span>
+            Handle Orders
+          </h3>
+          <p>When customers purchase your products, you'll see them in the Orders tab:</p>
+          <ul>
+            <li><strong>Pending:</strong> New orders waiting for your confirmation</li>
+            <li><strong>Processing:</strong> Orders you're preparing to ship</li>
+            <li><strong>Shipped:</strong> Orders that have been sent out</li>
+            <li><strong>Delivered:</strong> Completed orders</li>
+          </ul>
+          <div class="highlight">📦 Update order status as you process and ship items</div>
+        </div>
+
+        <div class="tutorial-step">
+          <h3>
+            <span class="step-number">5</span>
+            Track Your Analytics
+          </h3>
+          <p>The Analytics tab shows you:</p>
+          <ul>
+            <li>Total number of products listed</li>
+            <li>Total orders received</li>
+            <li>Total revenue generated</li>
+            <li>Pending orders count</li>
+            <li>Product category distribution</li>
+          </ul>
+          <p>Use this data to understand your sales performance and plan your inventory.</p>
+        </div>
+
+        <div class="tutorial-step">
+          <h3>
+            <span class="step-number">6</span>
+            Best Practices
+          </h3>
+          <ul>
+            <li>Respond to orders promptly</li>
+            <li>Keep accurate stock counts</li>
+            <li>Upload high-quality product images</li>
+            <li>Write detailed, honest product descriptions</li>
+            <li>Update order status regularly</li>
+            <li>Maintain good communication with buyers</li>
+          </ul>
+        </div>
+
+        <div style="text-align:center; margin-top:3rem; padding:2rem; background:var(--bg-glass); border-radius:var(--radius-card);">
+          <h2 style="font-family:'Playfair Display',serif; margin-bottom:1rem;">Ready to Start Selling?</h2>
+          <p style="color:var(--text-muted); margin-bottom:2rem;">Click the button below to go to your Seller Dashboard and add your first product!</p>
+          <a href="seller-dashboard.html" class="btn btn-primary btn-wide">Go to Seller Dashboard</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Borneology – Your Sarawak craft identity.
+  </footer>
+
+  <script src="app-backend.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Require seller login
+    // Toast notification system
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    document.body.appendChild(toast);
+
+    function showToast(message, type = 'info', duration = 4000) {
+      toast.className = "toast";
+      if (type === 'success') {
+        toast.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95))';
+        toast.style.color = 'white';
+        toast.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+      } else if (type === 'error') {
+        toast.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95))';
+        toast.style.color = 'white';
+        toast.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+      } else if (type === 'warning') {
+        toast.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.95))';
+        toast.style.color = 'white';
+        toast.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+      } else {
+        toast.style.background = 'var(--bg-glass)';
+        toast.style.color = 'var(--tone-dark)';
+        toast.style.borderColor = 'var(--glass-border)';
+      }
+      
+      toast.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 1.2rem;">${type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warning' ? '⚠' : 'ℹ'}</span>
+          <span>${message}</span>
+        </div>
+      `;
+      toast.classList.add("show");
+      
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, duration);
+    }
+
+    // Require login and verified seller role
+    const notificationKey = 'seller_tutorial_notification_shown';
+    const lastNotification = sessionStorage.getItem(notificationKey);
+    const currentTime = Date.now();
+    const shouldShowNotification = !lastNotification || (currentTime - parseInt(lastNotification)) > 5000;
+    
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    
+    if (!isLoggedIn || isLoggedIn !== "true") {
+      if (shouldShowNotification) {
+        showToast("Please login to view this tutorial", 'warning', 3000);
+        sessionStorage.setItem(notificationKey, currentTime.toString());
+        setTimeout(() => {
+          window.location.href = "login.html?redirect=seller-tutorial.html";
+        }, 2000);
+      } else {
+        window.location.href = "login.html?redirect=seller-tutorial.html";
+      }
+    } else if (user.role !== "seller" && user.role !== "admin") {
+      if (shouldShowNotification) {
+        if (user.role === "seller" && !user.isVerifiedSeller) {
+          showToast("This tutorial is for verified sellers only. Please complete verification first.", 'info', 4000);
+          setTimeout(() => {
+            window.location.href = "profile.html";
+          }, 3000);
+        } else {
+          showToast("This tutorial is for verified sellers only", 'warning', 3000);
+          setTimeout(() => {
+            window.location.href = "profile.html";
+          }, 2000);
+        }
+        sessionStorage.setItem(notificationKey, currentTime.toString());
+      } else {
+        window.location.href = "profile.html";
+      }
+    } else {
+      // Authorized - clear notification flag
+      sessionStorage.removeItem(notificationKey);
+    }
+  </script>
+</body>
+</html>
+

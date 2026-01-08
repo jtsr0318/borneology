@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rattan Handwoven Bag – Borneology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="hornbill.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .breadcrumb {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .breadcrumb a {
+      color: var(--tone-mid);
+      text-decoration: underline;
+    }
+    .product-detail {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 2.4rem;
+      align-items: start;
+    }
+    .product-detail-image {
+      background: var(--bg-card);
+      border-radius: 22px;
+      padding: 1.2rem;
+      box-shadow: var(--shadow-soft);
+    }
+    .product-detail-info h2 {
+      font-family: "Playfair Display", serif;
+      font-size: 2rem;
+      margin-bottom: 0.4rem;
+      color: var(--tone-dark);
+    }
+    .product-detail-price {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--tone-mid);
+      margin-bottom: 1rem;
+    }
+    .product-detail-text {
+      color: var(--text-muted);
+      margin-bottom: 1.4rem;
+    }
+    .product-detail-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.3rem;
+      flex-wrap: wrap;
+    }
+    .share-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+    }
+    .share-pill {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+  <div class="motif-strip"></div>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-left">
+        <a class="logo" href="index.html">
+          <div class="logo-icon"></div>
+          <div>
+            <div class="logo-text-main">Borneology</div>
+            <div class="logo-text-sub">Sarawak Handicrafts</div>
+          </div>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html" class="active">Home</a>
+          <a href="shop.html">Shop Now</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      
+      <div class="nav-utility">
+        <button class="icon-btn" data-counter="wishlist" id="wishlistBtn">♡<span>0</span></button>
+        <button class="icon-btn" data-counter="cart" id="cartBtn">🛒<span>0</span></button>
+        <div class="profile-trigger" id="profileTrigger">
+          <img src="" alt="Profile" id="navAvatar" />
+          <span>Profile</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle">Menu</button>
+      </div>
+    </div>
+    
+    <div class="profile-menu" id="profileMenu">
+      <a href="profile.html">My profile</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="checkout.html">Checkout</a>
+      <a href="login.html">Login / Logout</a>
+    </div>
+    
+    <nav class="nav-drawer" id="navDrawer">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop Now</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+  <main>
+    <section>
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html">Home</a> / <a href="shop.html">All products</a> / Rattan Handwoven Bag
+        </div>
+
+        <div class="product-detail">
+          <div class="product-detail-image">
+            <img src="rattan-bag.jpg" alt="Rattan Handwoven Bag" />
+          </div>
+
+          <div class="product-detail-info">
+            <h2>Rattan Handwoven Bag</h2>
+            <div class="product-detail-price">RM85</div>
+            <p class="product-detail-text">
+              Woven deep in Sarawak's rainforest, this rattan bag carries generations of
+              tradition. Each strand is handcrafted by local artisans, inspired by
+              hornbills, rainforest flowers and river patterns.
+            </p>
+            <p class="product-detail-text">
+              Simple, natural and full of story — a piece of Sarawak you can carry
+              anywhere in the world.
+            </p>
+
+            <div class="product-detail-actions">
+              <button class="btn btn-primary" data-product data-action="cart" data-id="bag001" data-name="Rattan Handwoven Bag" data-price="85" data-image="rattan-bag.jpg">Add to cart</button>
+              <button class="btn btn-outline" data-product data-action="wishlist" data-id="bag001" data-name="Rattan Handwoven Bag" data-price="85" data-image="rattan-bag.jpg">♡ Save to wishlist</button>
+            </div>
+
+            <div class="share-row">
+              <span>Share</span>
+              <span class="share-pill">f</span>
+              <span class="share-pill">X</span>
+              <span class="share-pill">in</span>
+              <span class="share-pill">◎</span>
+            </div>
+
+            <div style="margin-top:1.4rem; font-size:0.9rem; color:var(--text-muted);">
+              <div>• Handcrafted in Sarawak, Malaysia</div>
+              <div>• Natural rattan • Lined interior • Adjustable strap</div>
+              <div>• Worldwide shipping available</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Borneology – Sarawak crafts, worldwide.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

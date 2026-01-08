@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Details – Borneology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="hornbill.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .breadcrumb {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .breadcrumb a {
+      color: var(--tone-mid);
+      text-decoration: underline;
+    }
+    .product-detail {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 2.4rem;
+      align-items: start;
+    }
+    .product-detail-image {
+      background: var(--bg-card);
+      border-radius: 22px;
+      padding: 1.2rem;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+    .product-detail-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+    .product-detail-info {
+      padding: 0 !important;
+      margin: 0 !important;
+      text-align: left !important;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .product-detail-info h2 {
+      font-family: "Playfair Display", serif;
+      font-size: 2rem;
+      margin: 0 0 0.5rem 0 !important;
+      padding: 0 !important;
+      color: var(--tone-dark);
+      text-align: left !important;
+    }
+    .product-detail-price {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--tone-mid);
+      margin: 0 0 1rem 0 !important;
+      padding: 0 !important;
+      text-align: left !important;
+    }
+    .product-detail-text {
+      color: var(--text-muted);
+      margin: 0 0 1.5rem 0 !important;
+      padding: 0 !important;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      text-align: left !important;
+    }
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 1.5rem 0 !important;
+      margin-left: 0 !important;
+      padding: 0 !important;
+      justify-content: flex-start !important;
+    }
+    .quantity-selector label {
+      font-weight: 600;
+      margin: 0;
+      margin-right: 0.5rem;
+    }
+    .product-detail-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+    .share-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+    }
+    .share-pill {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-muted);
+    }
+    .error {
+      text-align: center;
+      padding: 3rem;
+      color: #ef4444;
+    }
+    .quantity-input {
+      width: 60px;
+      padding: 0.5rem;
+      text-align: center;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 8px;
+    }
+    .quantity-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(0,0,0,0.15);
+      background: var(--bg-primary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .quantity-btn:hover {
+      background: var(--bg-secondary);
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+  <div class="motif-strip"></div>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-left">
+        <a class="logo" href="index.html">
+          <div class="logo-icon"></div>
+          <div>
+            <div class="logo-text-main">Borneology</div>
+            <div class="logo-text-sub">Sarawak Handicrafts</div>
+          </div>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="shop.html">Shop Now</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      
+      <div class="nav-utility">
+        <button class="icon-btn" data-counter="wishlist" id="wishlistBtn" title="Wishlist">♡<span>0</span></button>
+        <button class="icon-btn" data-counter="cart" id="cartBtn" title="Cart">🛒<span>0</span></button>
+        <a href="track-order.html" class="icon-btn-track" title="Track Order"></a>
+        <div class="profile-trigger" id="profileTrigger">
+          <img src="" alt="Profile" id="navAvatar" />
+          <span>Profile</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle">Menu</button>
+      </div>
+    </div>
+    
+    <div class="profile-menu" id="profileMenu">
+      <a href="profile.html">My profile</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="checkout.html">Checkout</a>
+      <a href="track-order.html" class="track-order-link">📦 Track Order</a>
+      <a href="login.html">Login / Logout</a>
+    </div>
+    
+    <nav class="nav-drawer" id="navDrawer">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop Now</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+  <main>
+    <section>
+      <div class="container">
+        <div class="breadcrumb" id="breadcrumb">
+          <a href="index.html">Home</a> / <a href="shop.html">All products</a> / <span id="productNameBreadcrumb">Loading...</span>
+        </div>
+
+        <div id="productContainer">
+          <div class="loading">
+            <p>Loading product details...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Borneology – Sarawak crafts, worldwide.
+  </footer>
+
+  <script src="app-backend.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Get product ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id') || window.location.pathname.match(/product-([^.]+)\.html/)?.[1];
+    
+    let currentProduct = null;
+    let quantity = 1;
+
+    // Load product details
+    async function loadProductDetails() {
+      const container = document.getElementById('productContainer');
+      
+      if (!productId) {
+        container.innerHTML = `
+          <div class="error">
+            <h2>Product Not Found</h2>
+            <p>No product ID provided.</p>
+            <a href="shop.html" class="btn btn-primary" style="margin-top:1rem;">Back to Shop</a>
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/products/${productId}`);
+        
+        if (!response.ok) {
+          throw new Error('Product not found');
+        }
+        
+        const product = await response.json();
+        currentProduct = product;
+        
+        // Check if seller is verified
+        let verifiedBadge = '';
+        if (product.sellerId) {
+          try {
+            const sellerData = await window.API.getUser(product.sellerId);
+            if (sellerData && sellerData.isVerifiedSeller) {
+              verifiedBadge = '<span style="display:inline-flex; align-items:center; gap:0.3rem; background:linear-gradient(135deg, #3b82f6, #2563eb); color:white; padding:0.35rem 0.75rem; border-radius:999px; font-size:0.85rem; font-weight:600; margin-left:0.75rem; box-shadow:0 2px 8px rgba(59,130,246,0.3);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Verified Seller</span>';
+            }
+          } catch (e) {
+            // Ignore errors
+          }
+        }
+        
+        // Update breadcrumb
+        document.getElementById('productNameBreadcrumb').textContent = product.name;
+        
+        // Update page title
+        document.title = `${product.name} – Borneology`;
+        
+        // Render product details
+        container.innerHTML = `
+          <div class="product-detail">
+            <div class="product-detail-image">
+              <img src="${product.image || 'hornbill.jpg'}" alt="${product.name}" onerror="this.onerror=null; this.src='hornbill.jpg';" />
+            </div>
+
+            <div class="product-detail-info" style="padding:0; margin:0; text-align:left;">
+              <h2 style="display:flex; align-items:center; flex-wrap:wrap; gap:0.5rem; margin:0 0 0.5rem 0; padding:0; text-align:left;">${product.name}${verifiedBadge}</h2>
+              <div class="product-detail-price" style="margin:0 0 1rem 0; padding:0; text-align:left;">RM${(product.price || 0).toFixed(2)}</div>
+              <div class="product-detail-text" style="margin:0 0 1.5rem 0; padding:0; text-align:left;">
+                ${(product.description || 'No description available.').replace(/\n/g, '<br>')}
+              </div>
+
+              <div class="quantity-selector" style="margin:1.5rem 0; padding:0; justify-content:flex-start;">
+                <label style="margin:0; margin-right:0.5rem; padding:0;">Quantity:</label>
+                <button class="quantity-btn" onclick="changeQuantity(-1)">−</button>
+                <input type="number" class="quantity-input" id="quantityInput" value="1" min="1" max="99" onchange="updateQuantity()" />
+                <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+              </div>
+
+              <div class="product-detail-actions">
+                <button class="btn btn-primary" onclick="addToCart()">Add to cart</button>
+                <button class="btn btn-outline" onclick="addToWishlist()">♡ Save to wishlist</button>
+              </div>
+
+              <div class="share-row">
+                <span>Share</span>
+                <span class="share-pill" onclick="shareProduct('facebook')">f</span>
+                <span class="share-pill" onclick="shareProduct('twitter')">X</span>
+                <span class="share-pill" onclick="shareProduct('linkedin')">in</span>
+                <span class="share-pill" onclick="shareProduct('copy')">◎</span>
+              </div>
+
+              <div style="margin-top:1.4rem; font-size:0.9rem; color:var(--text-muted);">
+                <div>• Handcrafted in Sarawak, Malaysia</div>
+                <div>• Category: <strong>${product.category || 'Other'}</strong></div>
+                ${product.stock ? `<div>• Stock: <strong>${product.stock} available</strong></div>` : ''}
+                <div>• Worldwide shipping available</div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+      } catch (error) {
+        console.error('Error loading product:', error);
+        container.innerHTML = `
+          <div class="error">
+            <h2>Product Not Found</h2>
+            <p>Sorry, we couldn't find this product.</p>
+            <a href="shop.html" class="btn btn-primary" style="margin-top:1rem;">Back to Shop</a>
+          </div>
+        `;
+      }
+    }
+
+    function changeQuantity(delta) {
+      const input = document.getElementById('quantityInput');
+      let value = parseInt(input.value) || 1;
+      value = Math.max(1, Math.min(99, value + delta));
+      input.value = value;
+      quantity = value;
+    }
+
+    function updateQuantity() {
+      const input = document.getElementById('quantityInput');
+      quantity = Math.max(1, Math.min(99, parseInt(input.value) || 1));
+      input.value = quantity;
+    }
+
+    async function addToCart() {
+      if (!currentProduct) return;
+      
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (!isLoggedIn || isLoggedIn !== "true") {
+        if (confirm('Please login to add items to your cart. Would you like to go to the login page?')) {
+          window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`;
+        }
+        return;
+      }
+
+      try {
+        const userId = localStorage.getItem('userId');
+        for (let i = 0; i < quantity; i++) {
+          await window.API.addToCart({
+            userId,
+            productId: currentProduct.id,
+            productName: currentProduct.name,
+            productPrice: currentProduct.price,
+            productImage: currentProduct.image || 'placeholder.jpg',
+            quantity: 1
+          });
+        }
+        
+        alert(`Added ${quantity} item(s) to cart!`);
+        if (window.updateCounters) {
+          window.updateCounters();
+        }
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert('Failed to add to cart. Please try again.');
+      }
+    }
+
+    async function addToWishlist() {
+      if (!currentProduct) return;
+      
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (!isLoggedIn || isLoggedIn !== "true") {
+        if (confirm('Please login to add items to your wishlist. Would you like to go to the login page?')) {
+          window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`;
+        }
+        return;
+      }
+
+      try {
+        const userId = localStorage.getItem('userId');
+        await window.API.addToWishlist({
+          userId,
+          productId: currentProduct.id,
+          productName: currentProduct.name,
+          productPrice: currentProduct.price,
+          productImage: currentProduct.image || 'placeholder.jpg'
+        });
+        
+        alert('Added to wishlist!');
+        if (window.updateCounters) {
+          window.updateCounters();
+        }
+      } catch (error) {
+        console.error('Error adding to wishlist:', error);
+        alert('Failed to add to wishlist. Please try again.');
+      }
+    }
+
+    function shareProduct(platform) {
+      const url = window.location.href;
+      const text = `Check out ${currentProduct?.name || 'this product'} on Borneology!`;
+      
+      let shareUrl = '';
+      switch(platform) {
+        case 'facebook':
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+          break;
+        case 'twitter':
+          shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+          break;
+        case 'linkedin':
+          shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+          break;
+        case 'copy':
+          navigator.clipboard.writeText(url).then(() => {
+            alert('Link copied to clipboard!');
+          });
+          return;
+      }
+      
+      if (shareUrl) {
+        window.open(shareUrl, '_blank', 'width=600,height=400');
+      }
+    }
+
+    // Load product on page load
+    loadProductDetails();
+  </script>
+</body>
+</html>
+

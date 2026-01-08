@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Borneology – Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="hornbill.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .login-hero {
+      min-height: calc(100vh - 78px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    }
+    .login-art {
+      background: linear-gradient(135deg, rgba(184,122,74,0.85), rgba(60,38,25,0.8)), url("login-weave.jpg") center/cover no-repeat;
+      color: #fdf4df;
+      padding: 4rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .login-art h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 2.6rem;
+      margin-bottom: 1rem;
+    }
+    .login-form {
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-card);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+    .mode-toggle {
+      display: flex;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 999px;
+      margin-bottom: 1.4rem;
+      overflow: hidden;
+    }
+    .mode-toggle button {
+      flex: 1;
+      border: none;
+      padding: 0.65rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      position: relative;
+      z-index: 10;
+      pointer-events: auto;
+    }
+    .mode-toggle button.active {
+      background: var(--tone-dark);
+      color: #fef7ec;
+    }
+    .login-card .form-group {
+      margin-bottom: 1rem;
+    }
+    .login-card label {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .login-card input {
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.22);
+      padding: 0.58rem 0.7rem;
+      font: inherit;
+      background: #fdf5ea;
+      width: 100%;
+    }
+    .login-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.6rem;
+      text-align: center;
+    }
+    .role-toggle {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.4rem;
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      padding: 0.4rem;
+      border-radius: 16px;
+      border: 2px solid rgba(184, 122, 74, 0.2);
+    }
+    .role-toggle button {
+      flex: 1;
+      border: none;
+      padding: 0.75rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 10;
+      pointer-events: auto;
+    }
+    .role-toggle button:hover {
+      color: var(--tone-dark);
+      background: rgba(184, 122, 74, 0.1);
+    }
+    .role-toggle button.active {
+      background: linear-gradient(135deg, var(--tone-dark), var(--tone-mid));
+      color: #fef7ec;
+      box-shadow: 0 4px 12px rgba(60, 38, 25, 0.3);
+      transform: translateY(-1px);
+    }
+    .role-toggle button.active {
+      padding-left: 2rem;
+    }
+    .role-toggle button.active::after {
+      content: "✓";
+      position: absolute;
+      left: 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    /* Hide avatar completely on login page */
+    .profile-trigger img {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    /* Hide profile trigger when not logged in */
+    body:not(.logged-in) .profile-trigger {
+      display: none !important;
+    }
+    @media (max-width: 900px) {
+      .login-hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .login-art {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+  <div class="motif-strip"></div>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-left">
+        <a class="logo" href="index.html">
+          <div class="logo-icon"></div>
+          <div>
+            <div class="logo-text-main">Borneology</div>
+            <div class="logo-text-sub">Sarawak Handicrafts</div>
+          </div>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html" class="active">Home</a>
+          <a href="shop.html">Shop Now</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      
+      <div class="nav-utility">
+        <button class="icon-btn" data-counter="wishlist" id="wishlistBtn">♡<span>0</span></button>
+        <button class="icon-btn" data-counter="cart" id="cartBtn">🛒<span>0</span></button>
+        <!-- Profile trigger hidden on login page when not logged in -->
+        <div class="profile-trigger" id="profileTrigger" style="display:none;">
+          <!-- No avatar image - completely empty -->
+          <span>Profile</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle">Menu</button>
+      </div>
+    </div>
+    
+    <div class="profile-menu" id="profileMenu">
+      <a href="profile.html">My profile</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="checkout.html">Checkout</a>
+      <a href="login.html">Login / Logout</a>
+    </div>
+    
+    <nav class="nav-drawer" id="navDrawer">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop Now</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+  <main>
+    <div class="login-hero">
+      <div class="login-art">
+        <div>
+          <h1>Welcome back to Sarawak's creative circle.</h1>
+          <p style="font-size:1.05rem; line-height:1.7;">
+            Buyers discover handcrafted treasures. Sellers share hornbill-inspired artistry with the world.
+            Sign in to keep the stories weaving.
+          </p>
+        </div>
+        <div style="display:flex; gap:0.8rem; align-items:center;">
+          <span>New to Borneology?</span>
+          <span style="color:#fbe7c7;">Click "Register" to create an account</span>
+        </div>
+      </div>
+
+      <div class="login-form">
+        <form class="login-card" id="loginForm">
+          <div class="mode-toggle">
+            <button type="button" class="active" id="loginTab">Login</button>
+            <button type="button" id="registerTab">Register</button>
+          </div>
+
+          <div class="role-toggle" id="roleToggle">
+            <button type="button" class="active" data-role="buyer">🛒 Buyer</button>
+            <button type="button" data-role="seller">🏪 Seller</button>
+          </div>
+
+          <div id="registerFields" style="display:none;">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input id="name" name="name" type="text" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-wide" id="submitBtn">Login</button>
+          <div class="login-note" id="loginStatus">Signing in as Buyer</div>
+          
+          <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid rgba(0,0,0,0.1);">
+            <div style="text-align:center; color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">Or continue with</div>
+            <div style="display:flex; gap:0.75rem; flex-direction:column;">
+              <button type="button" class="btn btn-outline" id="googleLoginBtn" style="display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.96-2.184l-2.908-2.258c-.806.54-1.837.86-3.052.86-2.35 0-4.34-1.587-5.052-3.72H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.948 10.698c-.18-.54-.282-1.117-.282-1.698s.102-1.158.282-1.698V4.97H.957C.348 6.175 0 7.55 0 9s.348 2.825.957 4.03l2.991-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.97L3.948 7.302C4.66 5.167 6.65 3.58 9 3.58z"/></svg>
+                Google
+              </button>
+              <button type="button" class="btn btn-outline" id="facebookLoginBtn" style="display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="#1877F2"><path d="M18 9c0-4.97-4.03-9-9-9S0 4.03 0 9c0 4.42 3.21 8.1 7.42 8.84v-6.26H5.31V9h2.11V7.02c0-2.08 1.24-3.23 3.13-3.23.91 0 1.86.16 1.86.16v2.05h-1.05c-1.03 0-1.35.64-1.35 1.3V9h2.31l-.37 2.58h-1.94v6.26C14.79 17.1 18 13.42 18 9z"/></svg>
+                Facebook
+              </button>
+              <button type="button" class="btn btn-outline" id="appleLoginBtn" style="display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="#000"><path d="M13.56 3.78c-.9 1.05-2.4 1.8-3.96 1.68-.18-1.35.45-2.7 1.35-3.6.9-.9 2.25-1.62 3.6-1.35-.09 1.2.3 2.4 1.05 3.27zm.9 1.35c-1.8-.15-3.3.9-4.2.9-.9 0-2.25-.9-3.75-.9-1.95 0-3.75 1.2-4.95 3.15-2.1 3.6-.6 9 1.5 12 .9 1.35 2.1 2.85 3.6 2.7 1.35-.15 1.95-.9 3.6-.9 1.65 0 2.1.9 3.6.9 1.5.15 2.55-1.2 3.45-2.55.75-1.2.6-1.8 1.2-3.15-1.65-.6-2.7-2.25-2.55-3.6.15-1.2 1.05-2.1 2.1-2.55z"/></svg>
+                Apple
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Borneology – Secure gateway for artisans & collectors.
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Clear cart/wishlist when not logged in
+      const isLoggedInCheck = localStorage.getItem("isLoggedIn");
+      if (!isLoggedInCheck || isLoggedInCheck !== "true") {
+        // Clear cart and wishlist
+        localStorage.removeItem("cart");
+        localStorage.removeItem("wishlist");
+        // Update counters to 0
+        document.querySelectorAll('[data-counter="wishlist"] span').forEach((el) => {
+          el.textContent = "0";
+        });
+        document.querySelectorAll('[data-counter="cart"] span').forEach((el) => {
+          el.textContent = "0";
+        });
+      }
+      
+      // Hide profile trigger and avatar completely on login page when not logged in
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (!isLoggedIn || isLoggedIn !== "true") {
+      const profileTrigger = document.getElementById("profileTrigger");
+      if (profileTrigger) {
+        profileTrigger.style.display = "none";
+        // Remove any avatar images
+        const avatarImgs = profileTrigger.querySelectorAll("img");
+        avatarImgs.forEach(img => {
+          img.style.display = "none";
+          img.style.visibility = "hidden";
+          img.style.opacity = "0";
+          img.style.width = "0";
+          img.style.height = "0";
+        });
+      }
+      // Also hide any avatar images in nav
+      document.querySelectorAll(".nav-utility img").forEach(img => {
+        img.style.display = "none";
+        img.style.visibility = "hidden";
+        img.style.opacity = "0";
+        img.style.width = "0";
+        img.style.height = "0";
+      });
+      } else {
+        // User is logged in, add class to body
+        document.body.classList.add("logged-in");
+      }
+      
+      // Check if user is already logged in - show logout option
+      const isLoggedInForLogout = localStorage.getItem("isLoggedIn");
+      if (isLoggedInForLogout === "true") {
+        const loginCard = document.querySelector(".login-card");
+        if (loginCard) {
+          loginCard.innerHTML = `
+            <h3 style="margin-bottom:1rem; font-family:'Playfair Display',serif;">You're logged in</h3>
+            <p style="color:var(--text-muted); margin-bottom:1.5rem;">Welcome back! You can now access all features.</p>
+            <button class="btn btn-primary btn-wide" id="logoutBtn">Logout</button>
+            <div class="login-note" style="margin-top:1rem;">
+              <a href="index.html" style="color:var(--tone-mid);">Go to Home →</a>
+            </div>
+          `;
+          document.getElementById("logoutBtn").addEventListener("click", () => {
+            // Clear all user data
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("userId");
+            localStorage.removeItem("user");
+            // Clear cart and wishlist
+            localStorage.removeItem("cart");
+            localStorage.removeItem("wishlist");
+            // Hide profile trigger and avatar when logging out
+            const profileTrigger = document.getElementById("profileTrigger");
+            if (profileTrigger) {
+              profileTrigger.style.display = "none";
+            }
+            // Update counters to show 0
+            if (window.updateCounters) {
+              window.updateCounters();
+            }
+            showToast("Logged out successfully");
+            setTimeout(() => {
+              location.reload();
+            }, 800);
+          });
+        }
+      } else {
+        // User is not logged in - setup login/register form
+        const loginTab = document.getElementById("loginTab");
+        const registerTab = document.getElementById("registerTab");
+        const roleToggle = document.getElementById("roleToggle");
+        const registerFields = document.getElementById("registerFields");
+        const submitBtn = document.getElementById("submitBtn");
+        const statusText = document.getElementById("loginStatus");
+        
+        if (!loginTab || !registerTab || !roleToggle || !registerFields || !submitBtn || !statusText) {
+          console.error("Required elements not found:", {
+            loginTab: !!loginTab,
+            registerTab: !!registerTab,
+            roleToggle: !!roleToggle,
+            registerFields: !!registerFields,
+            submitBtn: !!submitBtn,
+            statusText: !!statusText
+          });
+          return;
+        }
+        
+        const roleButtons = roleToggle.querySelectorAll("button");
+        let isRegisterMode = false;
+        
+        console.log("Setting up login form handlers...");
+
+        // Toggle between Login and Register
+        if (loginTab) {
+          loginTab.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Login tab clicked");
+            loginTab.classList.add("active");
+            registerTab.classList.remove("active");
+            registerFields.style.display = "none";
+            submitBtn.textContent = "Login";
+            const selectedRole = roleToggle.querySelector("button.active")?.dataset.role || "buyer";
+            const role = selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1);
+            statusText.textContent = `Signing in as ${role}`;
+            isRegisterMode = false;
+          });
+        }
+
+        if (registerTab) {
+          registerTab.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Register tab clicked");
+            registerTab.classList.add("active");
+            loginTab.classList.remove("active");
+            registerFields.style.display = "block";
+            submitBtn.textContent = "Register";
+            const selectedRole = roleToggle.querySelector("button.active")?.dataset.role || "buyer";
+            const role = selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1);
+            statusText.textContent = `Creating account as ${role}`;
+            isRegisterMode = true;
+          });
+        }
+
+        // Role toggle (Buyer/Seller)
+        if (roleButtons && roleButtons.length > 0) {
+          roleButtons.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log("Role button clicked:", btn.dataset.role);
+              roleButtons.forEach((b) => b.classList.remove("active"));
+              btn.classList.add("active");
+              const role = btn.dataset.role.charAt(0).toUpperCase() + btn.dataset.role.slice(1);
+              statusText.textContent = isRegisterMode 
+                ? `Creating account as ${role}` 
+                : `Signing in as ${role}`;
+            });
+          });
+        }
+
+        // Form submission
+        const loginForm = document.getElementById("loginForm");
+        if (!loginForm) {
+          console.error("Login form not found!");
+          return;
+        }
+        
+        loginForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const email = document.getElementById("email")?.value;
+          const password = document.getElementById("password")?.value;
+          const name = document.getElementById("name")?.value;
+          const selectedRole = roleToggle.querySelector("button.active")?.dataset.role || "buyer";
+          
+          if (!email || !password) {
+            statusText.textContent = "Please enter email and password";
+            showToast("Email and password are required");
+            return;
+          }
+          
+          if (isRegisterMode) {
+          // Registration
+          if (!name || name.trim() === "") {
+            statusText.textContent = "Please enter your name";
+            showToast("Name is required");
+            return;
+          }
+          
+          statusText.textContent = "Registering...";
+          
+          try {
+            const response = await fetch('/api/auth/register', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, password, name, role: selectedRole })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              statusText.textContent = "Registration successful! Logging in...";
+              showToast("Account created successfully!");
+              
+              // Auto-login after registration
+              setTimeout(async () => {
+                try {
+                  const loginResponse = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                  });
+                  
+                  const loginResult = await loginResponse.json();
+                  
+                  if (loginResult.success) {
+                    localStorage.setItem('userId', loginResult.userId);
+                    localStorage.setItem('user', JSON.stringify(loginResult.user));
+                    localStorage.setItem('isLoggedIn', 'true');
+                    showToast("Login successful!");
+                    
+                    // Priority 1: Admin users always go to admin dashboard
+                    if (loginResult.user.role === 'admin') {
+                      setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
+                      }, 1500);
+                      return;
+                    }
+                    
+                    // Priority 2: If registered as seller, redirect to seller application page
+                    if (selectedRole === 'seller') {
+                      showToast("Please complete seller verification to start selling!");
+                      setTimeout(() => {
+                        window.location.href = 'seller-application.html';
+                      }, 1500);
+                    } else {
+                      // Priority 3: Check for redirect parameter (non-admin only)
+                      const urlParams = new URLSearchParams(window.location.search);
+                      const redirect = urlParams.get('redirect');
+                      if (redirect && redirect !== 'admin-dashboard.html') {
+                        window.location.href = redirect;
+                      } else {
+                        window.location.href = "index.html";
+                      }
+                    }
+                  } else {
+                    showToast("Registration successful! Please login.");
+                  }
+                } catch (loginError) {
+                  console.error('Auto-login error:', loginError);
+                  showToast("Registration successful! Please login.");
+                }
+              }, 1000);
+            } else {
+              statusText.textContent = "Registration failed. Try again.";
+              showToast(result.error || "Registration failed");
+            }
+          } catch (error) {
+            console.error('Registration error:', error);
+            statusText.textContent = "Connection error. Check server.";
+            showToast("Failed to connect to server");
+          }
+        } else {
+          // Login
+          statusText.textContent = "Logging in...";
+          
+          try {
+            const response = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, password })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              localStorage.setItem('userId', result.userId);
+              // Ensure role is included in user object
+              const userData = {
+                ...result.user,
+                role: result.user.role || 'buyer',
+                id: result.userId
+              };
+              localStorage.setItem('user', JSON.stringify(userData));
+              localStorage.setItem('isLoggedIn', 'true');
+              
+              console.log('✅ Login successful, user data:', userData);
+              console.log('✅ User role:', userData.role);
+              
+              // Clear old cart/wishlist from previous sessions
+              localStorage.removeItem("cart");
+              localStorage.removeItem("wishlist");
+              
+              // Priority 1: Admin users always go to admin dashboard
+              if (userData.role === 'admin') {
+                statusText.textContent = "Redirecting to admin dashboard...";
+                showToast("Login successful! Redirecting to admin dashboard...");
+                setTimeout(() => {
+                  window.location.href = 'admin-dashboard.html';
+                }, 1000);
+                return;
+              }
+              
+              // Priority 2: Check redirect parameter (for non-admin users)
+              const urlParams = new URLSearchParams(window.location.search);
+              const redirect = urlParams.get('redirect');
+              if (redirect && redirect !== 'admin-dashboard.html') {
+                // Only allow redirect for non-admin pages
+                statusText.textContent = "Success! Redirecting...";
+                showToast("Login successful!");
+                setTimeout(() => {
+                  window.location.href = redirect;
+                }, 1200);
+                return;
+              }
+              
+              // Priority 3: Check if user is seller but not verified
+              const user = userData;
+              if (user.role === 'seller' && !user.isVerifiedSeller) {
+                // Check if they have submitted application
+                const statusResponse = await fetch(`/api/seller/status/${result.userId}`);
+                const statusData = await statusResponse.json();
+                
+                if (statusData.status === 'not_applied') {
+                  statusText.textContent = "Redirecting to seller verification...";
+                  showToast("Please complete seller verification!");
+                  setTimeout(() => {
+                    window.location.href = 'seller-application.html';
+                  }, 1200);
+                  return;
+                } else if (statusData.status === 'pending') {
+                  statusText.textContent = "Your verification is pending...";
+                  setTimeout(() => {
+                    window.location.href = 'profile.html';
+                  }, 1200);
+                  return;
+                }
+              }
+              
+              // Priority 4: Default redirect for buyers and verified sellers
+              statusText.textContent = "Success! Redirecting...";
+              showToast("Login successful!");
+              // Update counters
+              if (window.initializeStorage) {
+                await window.initializeStorage();
+              }
+              if (window.updateCounters) {
+                window.updateCounters();
+              }
+              setTimeout(() => {
+                window.location.href = "index.html";
+              }, 1200);
+            } else {
+              statusText.textContent = "Login failed. Try again or register.";
+              showToast(result.error || "Login failed");
+            }
+          } catch (error) {
+            console.error('Login error:', error);
+            statusText.textContent = "Connection error. Using offline mode.";
+            showToast("Using offline mode");
+            // Fallback to localStorage
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("userId", "offline-user");
+            setTimeout(() => {
+              // Check for redirect parameter
+              const urlParams = new URLSearchParams(window.location.search);
+              const redirect = urlParams.get('redirect');
+              window.location.href = redirect || "index.html";
+            }, 1200);
+          }
+          }
+        });
+
+        // Social login handlers
+        let firebaseAuth = null;
+        let firebaseApp = null;
+        let firebaseInitialized = false;
+        
+        // Initialize Firebase Auth - called after Firebase SDK loads
+        function initializeFirebase() {
+          try {
+            // Check if Firebase SDK is loaded
+            if (typeof firebase === 'undefined') {
+              console.warn('⚠️ Firebase SDK not loaded yet');
+              return false;
+            }
+            
+            // Check if Firebase already initialized
+            if (firebase.apps && firebase.apps.length > 0) {
+              firebaseApp = firebase.apps[0];
+              firebaseAuth = firebase.auth();
+              firebaseInitialized = true;
+              console.log('✅ Firebase already initialized');
+              return true;
+            }
+            
+            // Get Firebase config from firebase-config.js (window variables)
+            const firebaseConfig = {
+              apiKey: window.FIREBASE_API_KEY,
+              authDomain: window.FIREBASE_AUTH_DOMAIN,
+              projectId: window.FIREBASE_PROJECT_ID,
+              storageBucket: window.FIREBASE_STORAGE_BUCKET,
+              messagingSenderId: window.FIREBASE_MESSAGING_SENDER_ID,
+              appId: window.FIREBASE_APP_ID
+            };
+            
+            // Validate config
+            if (!firebaseConfig.apiKey || firebaseConfig.apiKey.includes('YOUR_')) {
+              console.error('❌ Firebase config not found or incomplete. Please check firebase-config.js');
+              console.log('Current config:', firebaseConfig);
+              return false;
+            }
+            
+            // Initialize Firebase
+            firebaseApp = firebase.initializeApp(firebaseConfig);
+            firebaseAuth = firebase.auth();
+            firebaseInitialized = true;
+            console.log('✅ Firebase initialized successfully');
+            console.log('Project:', firebaseConfig.projectId);
+            return true;
+          } catch (error) {
+            console.error('❌ Firebase initialization error:', error);
+            console.error('Error details:', error.message, error.code);
+            return false;
+          }
+        }
+        
+        // Wait for Firebase SDK to load, then initialize
+        function waitForFirebaseAndInit() {
+          if (typeof firebase !== 'undefined') {
+            setTimeout(() => {
+              initializeFirebase();
+            }, 100);
+          } else {
+            // Retry after a short delay
+            setTimeout(waitForFirebaseAndInit, 200);
+          }
+        }
+        
+        // Start initialization when page loads
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => {
+            waitForFirebaseAndInit();
+          });
+        } else {
+          waitForFirebaseAndInit();
+        }
+
+        // Google login
+        document.getElementById('googleLoginBtn')?.addEventListener('click', async () => {
+          statusText.textContent = 'Initializing Google login...';
+          
+          // Ensure Firebase is initialized
+          if (!firebaseInitialized || !firebaseAuth) {
+            const initialized = initializeFirebase();
+            if (!initialized || !firebaseAuth) {
+              showToast('Firebase not configured. Please check firebase-config.js and console.');
+              statusText.textContent = 'Firebase configuration error';
+              console.error('❌ Firebase Auth not available.');
+              console.log('Check:');
+              console.log('1. firebase-config.js exists and has correct values');
+              console.log('2. Firebase SDK scripts are loaded');
+              console.log('3. window.FIREBASE_API_KEY:', window.FIREBASE_API_KEY);
+              return;
+            }
+          }
+          
+          try {
+            statusText.textContent = 'Opening Google login popup...';
+            const provider = new firebase.auth.GoogleAuthProvider();
+            
+            // Add scopes
+            provider.addScope('email');
+            provider.setCustomParameters({
+              prompt: 'select_account'
+            });
+            
+            console.log('🔐 Attempting Google sign-in with popup...');
+            const result = await firebaseAuth.signInWithPopup(provider);
+            const user = result.user;
+            console.log('✅ Google sign-in successful:', user.email);
+            
+            statusText.textContent = 'Authenticating with server...';
+            
+            // Get ID token
+            const idToken = await user.getIdToken();
+            console.log('📝 Got ID token, sending to server...');
+            
+            // Send to backend
+            const response = await fetch('/api/auth/social', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                provider: 'google',
+                idToken: idToken,
+                email: user.email,
+                name: user.displayName || user.email,
+                photoURL: user.photoURL
+              })
+            });
+            
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || `Server error: ${response.status}`);
+            }
+            
+            const socialResult = await response.json();
+            console.log('✅ Server response:', socialResult);
+            
+            if (socialResult.success) {
+              localStorage.setItem('userId', socialResult.userId);
+              localStorage.setItem('user', JSON.stringify(socialResult.user));
+              localStorage.setItem('isLoggedIn', 'true');
+              showToast('Login successful!');
+              
+              // Priority 1: Admin users always go to admin dashboard
+              if (socialResult.user.role === 'admin') {
+                setTimeout(() => {
+                  window.location.href = 'admin-dashboard.html';
+                }, 1200);
+                return;
+              }
+              
+              // Priority 2: Check if seller needs verification
+              if (socialResult.user.role === 'seller' && !socialResult.user.isVerifiedSeller) {
+                try {
+                  const statusResponse = await fetch(`/api/seller/status/${socialResult.userId}`);
+                  const statusData = await statusResponse.json();
+                  if (statusData.status === 'not_applied') {
+                    setTimeout(() => window.location.href = 'seller-application.html', 1500);
+                    return;
+                  }
+                } catch (e) {
+                  console.error('Status check error:', e);
+                }
+              }
+              
+              // Priority 3: Default redirect
+              setTimeout(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                // Only allow redirect for non-admin pages
+                if (redirect && redirect !== 'admin-dashboard.html') {
+                  window.location.href = redirect;
+                } else {
+                  window.location.href = 'index.html';
+                }
+              }, 1200);
+            } else {
+              throw new Error(socialResult.error || 'Login failed');
+            }
+          } catch (error) {
+            console.error('❌ Google login error:', error);
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
+            console.error('Full error:', error);
+            
+            let errorMessage = 'Google login failed. ';
+            let statusMessage = 'Login failed';
+            
+            if (error.code === 'auth/popup-closed-by-user') {
+              errorMessage = 'Login cancelled by user';
+              statusMessage = 'Login cancelled';
+            } else if (error.code === 'auth/popup-blocked') {
+              errorMessage = 'Popup blocked. Please allow popups for this site in browser settings.';
+              statusMessage = 'Popup blocked';
+            } else if (error.code === 'auth/unauthorized-domain') {
+              errorMessage = 'Domain not authorized. Add "localhost" to Firebase Console > Authentication > Settings > Authorized domains.';
+              statusMessage = 'Domain not authorized';
+            } else if (error.code === 'auth/operation-not-allowed') {
+              errorMessage = 'Google sign-in not enabled. Enable it in Firebase Console > Authentication > Sign-in method > Google.';
+              statusMessage = 'Provider not enabled';
+            } else if (error.code === 'auth/network-request-failed') {
+              errorMessage = 'Network error. Please check your internet connection.';
+              statusMessage = 'Network error';
+            } else if (error.code) {
+              errorMessage += `Error: ${error.code} - ${error.message}`;
+            } else {
+              errorMessage += error.message || 'Unknown error. Check console for details.';
+            }
+            
+            showToast(errorMessage);
+            statusText.textContent = statusMessage;
+          }
+        });
+
+        // Facebook login
+        document.getElementById('facebookLoginBtn')?.addEventListener('click', async () => {
+          statusText.textContent = 'Initializing Facebook login...';
+          
+          // Ensure Firebase is initialized
+          if (!firebaseInitialized || !firebaseAuth) {
+            const initialized = initializeFirebase();
+            if (!initialized || !firebaseAuth) {
+              showToast('Firebase not configured. Please check firebase-config.js and console.');
+              statusText.textContent = 'Firebase configuration error';
+              console.error('❌ Firebase Auth not available.');
+              return;
+            }
+          }
+          
+          try {
+            statusText.textContent = 'Opening Facebook login popup...';
+            const provider = new firebase.auth.FacebookAuthProvider();
+            provider.addScope('email');
+            provider.addScope('public_profile');
+            
+            console.log('🔐 Attempting Facebook sign-in with popup...');
+            const result = await firebaseAuth.signInWithPopup(provider);
+            const user = result.user;
+            console.log('✅ Facebook sign-in successful');
+            
+            statusText.textContent = 'Authenticating with server...';
+            
+            // Get ID token
+            const idToken = await user.getIdToken();
+            console.log('📝 Got ID token, sending to server...');
+            
+            // Get email - Facebook sometimes doesn't provide email
+            let userEmail = user.email;
+            if (!userEmail && user.providerData && user.providerData.length > 0) {
+              userEmail = user.providerData[0].email;
+            }
+            if (!userEmail) {
+              userEmail = `${user.uid}@facebook.com`;
+            }
+            
+            const response = await fetch('/api/auth/social', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                provider: 'facebook',
+                idToken: idToken,
+                email: userEmail,
+                name: user.displayName || 'Facebook User',
+                photoURL: user.photoURL
+              })
+            });
+            
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || `Server error: ${response.status}`);
+            }
+            
+            const socialResult = await response.json();
+            console.log('✅ Server response:', socialResult);
+            
+            if (socialResult.success) {
+              localStorage.setItem('userId', socialResult.userId);
+              localStorage.setItem('user', JSON.stringify(socialResult.user));
+              localStorage.setItem('isLoggedIn', 'true');
+              showToast('Login successful!');
+              
+              // Check if seller needs verification
+              if (socialResult.user.role === 'seller' && !socialResult.user.isVerifiedSeller) {
+                try {
+                  const statusResponse = await fetch(`/api/seller/status/${socialResult.userId}`);
+                  const statusData = await statusResponse.json();
+                  if (statusData.status === 'not_applied') {
+                    setTimeout(() => window.location.href = 'seller-application.html', 1500);
+                    return;
+                  }
+                } catch (e) {
+                  console.error('Status check error:', e);
+                }
+              }
+              
+              setTimeout(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                window.location.href = redirect || 'index.html';
+              }, 1200);
+            } else {
+              throw new Error(socialResult.error || 'Login failed');
+            }
+          } catch (error) {
+            console.error('❌ Facebook login error:', error);
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
+            console.error('Full error:', error);
+            
+            let errorMessage = 'Facebook login failed. ';
+            let statusMessage = 'Login failed';
+            
+            if (error.code === 'auth/popup-closed-by-user') {
+              errorMessage = 'Login cancelled by user';
+              statusMessage = 'Login cancelled';
+            } else if (error.code === 'auth/popup-blocked') {
+              errorMessage = 'Popup blocked. Please allow popups for this site in browser settings.';
+              statusMessage = 'Popup blocked';
+            } else if (error.code === 'auth/unauthorized-domain') {
+              errorMessage = 'Domain not authorized. Add "localhost" to Firebase Console > Authentication > Settings > Authorized domains.';
+              statusMessage = 'Domain not authorized';
+            } else if (error.code === 'auth/operation-not-allowed') {
+              errorMessage = 'Facebook sign-in not enabled. Enable it in Firebase Console > Authentication > Sign-in method > Facebook. You also need to configure App ID and App Secret.';
+              statusMessage = 'Provider not enabled';
+            } else if (error.code === 'auth/account-exists-with-different-credential') {
+              errorMessage = 'An account with this email already exists. Please use email/password login.';
+              statusMessage = 'Account exists with different method';
+            } else if (error.code === 'auth/invalid-credential') {
+              errorMessage = 'Facebook credentials invalid. Please check Firebase Console Facebook configuration.';
+              statusMessage = 'Invalid credentials';
+            } else if (error.code === 'auth/network-request-failed') {
+              errorMessage = 'Network error. Please check your internet connection.';
+              statusMessage = 'Network error';
+            } else if (error.code) {
+              errorMessage += `Error: ${error.code} - ${error.message}`;
+            } else {
+              errorMessage += error.message || 'Unknown error. Check console for details.';
+            }
+            
+            showToast(errorMessage);
+            statusText.textContent = statusMessage;
+          }
+        });
+
+        // Apple login
+        document.getElementById('appleLoginBtn')?.addEventListener('click', async () => {
+          statusText.textContent = 'Redirecting to Apple...';
+          
+          if (!firebaseAuth) {
+            showToast('Firebase not configured. Please use email/password.');
+            return;
+          }
+          
+          try {
+            const provider = new firebase.auth.OAuthProvider('apple.com');
+            provider.addScope('email');
+            provider.addScope('name');
+            const result = await firebaseAuth.signInWithPopup(provider);
+            const user = result.user;
+            
+            const response = await fetch('/api/auth/social', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                provider: 'apple',
+                idToken: await user.getIdToken(),
+                email: user.email,
+                name: user.displayName || user.email,
+                photoURL: user.photoURL
+              })
+            });
+            
+            const socialResult = await response.json();
+            if (socialResult.success) {
+              localStorage.setItem('userId', socialResult.userId);
+              localStorage.setItem('user', JSON.stringify(socialResult.user));
+              localStorage.setItem('isLoggedIn', 'true');
+              showToast('Login successful!');
+              
+              // Priority 1: Admin users always go to admin dashboard
+              if (socialResult.user.role === 'admin') {
+                setTimeout(() => {
+                  window.location.href = 'admin-dashboard.html';
+                }, 1200);
+                return;
+              }
+              
+              // Priority 2: Default redirect for other users
+              setTimeout(() => {
+                window.location.href = 'index.html';
+              }, 1200);
+            }
+          } catch (error) {
+            console.error('Apple login error:', error);
+            showToast('Apple login failed. Please use email/password.');
+            statusText.textContent = 'Login failed. Try again.';
+          }
+        });
+      }
+    }); // End of DOMContentLoaded
+  </script>
+  
+  <!-- Firebase Auth SDK - Load config first, then Firebase SDK -->
+  <script src="firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+</body>
+</html>

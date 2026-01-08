@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Borneology – Wishlist</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="hornbill.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.4rem;
+    }
+    .wishlist-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: 1rem;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .wishlist-card img {
+      width: 110px;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+    .wishlist-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+    .btn-sm {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body class="wishlist-page">
+  <header class="site-header">
+  <div class="motif-strip"></div>
+  <div class="container">
+    <div class="nav">
+      <a class="logo" href="index.html">
+        <div class="logo-icon"></div>
+        <div>
+          <div class="logo-text-main">Borneology</div>
+          <div class="logo-text-sub">Sarawak Handicrafts</div>
+        </div>
+      </a>
+      
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop Now</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      
+      <div class="nav-utility">
+        <button class="icon-btn" data-counter="wishlist" id="wishlistBtn" title="Wishlist">♡<span>0</span></button>
+        <button class="icon-btn" data-counter="cart" id="cartBtn" title="Cart">🛒<span>0</span></button>
+        <a href="track-order.html" class="icon-btn-track" title="Track Order"></a>
+        <div class="profile-trigger" id="profileTrigger">
+          <img src="" alt="Profile" id="navAvatar" />
+          <span>Profile</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle">Menu</button>
+      </div>
+    </div>
+    
+    <div class="profile-menu" id="profileMenu">
+      <a href="profile.html">My profile</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="checkout.html">Checkout</a>
+      <a href="track-order.html" class="track-order-link">📦 Track Order</a>
+      <a href="login.html">Login / Logout</a>
+    </div>
+    
+    <nav class="nav-drawer" id="navDrawer">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop Now</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+  <main>
+    <section>
+      <div class="container">
+        <div class="section-title">My Wishlist</div>
+        <p style="color:var(--text-muted); margin-bottom:1.2rem;">Move items to cart or keep curating your Sarawak wishlist.</p>
+        <div class="wishlist-grid" id="wishlistGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Borneology – Wishlist curated with love.
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // Require login for wishlist page
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (!isLoggedIn || isLoggedIn !== "true") {
+      alert("Please login to view your wishlist");
+      window.location.href = "login.html?redirect=wishlist.html";
+    }
+    function renderWishlist() {
+      const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+      const grid = document.getElementById("wishlistGrid");
+      
+      if (wishlist.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:2rem;">No items saved yet. Start adding from the shop!</p>';
+        return;
+      }
+      
+      grid.innerHTML = wishlist
+        .map(
+          (item) => `
+        <article class="wishlist-card">
+          <img src="${item.image}" alt="${item.name}" />
+          <div>
+            <h3 class="product-name" style="margin:0;">${item.name}</h3>
+            <div class="product-price" style="margin:0.4rem 0;">RM${item.price}</div>
+            <div class="wishlist-actions">
+              <button class="btn btn-primary btn-sm" data-move="${item.id}">Move to cart</button>
+              <button class="btn btn-outline btn-sm" data-remove="${item.id}">Remove</button>
+            </div>
+          </div>
+        </article>`
+        )
+        .join("");
+    }
+    
+    renderWishlist();
+    
+    document.getElementById("wishlistGrid").addEventListener("click", (e) => {
+      const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+      
+      if (e.target.dataset.move) {
+        const item = wishlist.find((i) => i.id === e.target.dataset.move);
+        if (item && !storage.cart.find((i) => i.id === item.id)) {
+          storage.cart.push(item);
+        }
+        storage.wishlist = wishlist.filter((i) => i.id !== item.id);
+        saveState();
+        updateCounters();
+        showToast(`${item.name} moved to cart`);
+        renderWishlist();
+      }
+      
+      if (e.target.dataset.remove) {
+        const item = wishlist.find((i) => i.id === e.target.dataset.remove);
+        storage.wishlist = wishlist.filter((i) => i.id !== e.target.dataset.remove);
+        saveState();
+        updateCounters();
+        showToast(`${item.name} removed from wishlist`);
+        renderWishlist();
+      }
+    });
+  </script>
+</body>
+</html>

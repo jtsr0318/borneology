@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Borneology – Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="hornbill.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="motif-strip"></div>
+    <div class="container">
+      <div class="nav">
+        <a class="logo" href="index.html">
+          <div class="logo-icon"></div>
+          <div>
+            <div class="logo-text-main">Borneology</div>
+            <div class="logo-text-sub">Sarawak Handicrafts</div>
+          </div>
+        </a>
+        
+        <nav class="nav-links">
+          <a href="index.html" class="active">Home</a>
+          <a href="shop.html">Shop Now</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        
+        <div class="nav-utility">
+          <button class="icon-btn" data-counter="wishlist" id="wishlistBtn" title="Wishlist">♡<span>0</span></button>
+          <button class="icon-btn" data-counter="cart" id="cartBtn" title="Cart">🛒<span>0</span></button>
+          <a href="checkout.html" class="icon-btn-track" title="Track Order"></a>
+          <div class="profile-trigger" id="profileTrigger">
+            <img src="" alt="Profile" id="navAvatar" />
+            <span>Profile</span>
+          </div>
+          <button class="menu-toggle" id="menuToggle">Menu</button>
+        </div>
+      </div>
+      
+      <div class="profile-menu" id="profileMenu">
+        <a href="profile.html">My profile</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="checkout.html">Checkout</a>
+        <a href="track-order.html" class="track-order-link">📦 Track Order</a>
+        <a href="login.html">Login / Logout</a>
+      </div>
+      
+      <nav class="nav-drawer" id="navDrawer">
+        <a href="index.html" class="active">Home</a>
+        <a href="shop.html">Shop Now</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero-wrapper">
+      <div class="container hero">
+        <div class="hero-content">
+          <p style="letter-spacing:0.4em; text-transform:uppercase; color:var(--tone-mid); margin-bottom:0.8rem; font-weight:600; font-size:0.85rem;">Sarawak Heritage</p>
+          <h1 class="hero-title">Soulful Handicrafts crafted in Borneo, collected by the world.</h1>
+          <p class="hero-text">
+            Every weave, carve and bead is lovingly made by Sarawak artisans. We curate their stories,
+            then deliver these timeless pieces to homes across the globe.
+          </p>
+          <div class="hero-cta">
+            <a href="shop.html" class="btn btn-primary">Explore Shop</a>
+            <a href="profile.html" class="btn btn-outline">Manage Profile</a>
+            <a href="#" class="btn btn-primary" id="becomeSellerBtn" style="background:linear-gradient(135deg, var(--tone-mid), var(--tone-dark)); margin-top:0.5rem; display:none;">🏪 Become a Seller</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <img src="hero-product.jpg" alt="Sarawak craft" />
+          <h3>Rattan Handwoven Bag</h3>
+          <p>Inspired by hornbill wings & forest hues. Ships worldwide.</p>
+          <a href="product-rattan-bag.html" class="btn btn-primary btn-wide">View Story</a>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <div class="container">
+        <div class="section-title">Celebrating Borneo's Heritage</div>
+        <p style="color:var(--text-muted); margin-bottom:2rem; max-width:700px; font-size:1.05rem;">
+          Discover the rich cultural tapestry of Sarawak through symbols that inspire our artisans:
+          the majestic hornbill, the rare rafflesia, and the playful proboscis monkey.
+        </p>
+
+        <div class="culture-grid">
+          <div class="culture-card">
+            <img src="hornbill.jpg" alt="Hornbill" class="culture-image" />
+            <h3>Hornbill</h3>
+            <p>
+              The majestic hornbill, Sarawak's state bird, symbolizes strength and wisdom.
+              Its elegant form inspires patterns in our textiles and wood carvings.
+            </p>
+          </div>
+
+          <div class="culture-card">
+            <img src="rafflesia.jpg" alt="Rafflesia" class="culture-image" />
+            <h3>Rafflesia</h3>
+            <p>
+              The world's largest flower, native to Borneo's rainforests. Its unique beauty
+              influences vibrant color palettes in our beaded jewelry.
+            </p>
+          </div>
+
+          <div class="culture-card">
+            <img src="proboscis-monkey.jpg" alt="Proboscis Monkey" class="culture-image" />
+            <h3>Proboscis Monkey</h3>
+            <p>
+              Endemic to Borneo, this playful primate represents harmony with nature.
+              Featured in storytelling through our woven baskets and crafts.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-title">About Borneology</div>
+        <div class="highlight-row" style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:2rem;">
+          <div class="glass-card">
+            <h3 style="font-family:'Playfair Display',serif; margin-bottom:0.8rem; color:var(--tone-dark);">Crafted Stories</h3>
+            <p>
+              We collaborate with Sarawak's weavers, carvers and beaders to preserve
+              traditional skills while sharing their stories with the world.
+            </p>
+          </div>
+          <div class="glass-card">
+            <h3 style="font-family:'Playfair Display',serif; margin-bottom:0.8rem; color:var(--tone-dark);">Empowering Artisans</h3>
+            <p>
+              Fair trade, transparent pricing and direct partnerships help artisans
+              build sustainable livelihoods.
+            </p>
+          </div>
+          <div class="glass-card">
+            <h3 style="font-family:'Playfair Display',serif; margin-bottom:0.8rem; color:var(--tone-dark);">Borneo to the World</h3>
+            <p>
+              We connect Sarawak's spirit with global homes, celebrating nature,
+              heritage and design excellence.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Borneology – Handcrafted in Sarawak for the world.
+  </footer>
+
+  <script src="app-backend.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Public browsing - no login required for home page
+    // Login only required for cart, checkout, wishlist, and profile
+    
+    // Show "Become a Seller" button if user is logged in and not a verified seller
+    document.addEventListener('DOMContentLoaded', async () => {
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      const becomeSellerBtn = document.getElementById('becomeSellerBtn');
+      
+      if (isLoggedIn && becomeSellerBtn) {
+        try {
+          const userId = localStorage.getItem('userId');
+          const user = JSON.parse(localStorage.getItem('user') || '{}');
+          
+          // Show button if user is not a verified seller
+          if (user.role !== 'seller' && user.role !== 'admin') {
+            becomeSellerBtn.style.display = 'inline-flex';
+            becomeSellerBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              window.location.href = 'seller-application.html';
+            });
+          } else if (user.role === 'seller' && !user.isVerifiedSeller) {
+            // Seller but not verified - check status
+            const statusResponse = await fetch(`/api/seller/status/${userId}`);
+            const statusData = await statusResponse.json();
+            
+            if (statusData.status === 'not_applied' || statusData.status === 'rejected') {
+              becomeSellerBtn.style.display = 'inline-flex';
+              becomeSellerBtn.textContent = '🏪 Complete Seller Verification';
+              becomeSellerBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = 'seller-application.html';
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Error checking seller status:', error);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

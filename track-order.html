@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Track Your Order – Borneology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="hornbill.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .track-hero {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      border-radius: 30px;
+      padding: 3rem 2rem;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow-glass);
+    }
+    .track-hero h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 2.5rem;
+      color: var(--tone-dark);
+      margin-bottom: 0.5rem;
+    }
+    .track-hero p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+    .track-input-section {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      padding: 2rem;
+      box-shadow: var(--shadow-glass);
+      margin-bottom: 2rem;
+    }
+    .track-input-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .track-input-group input {
+      flex: 1;
+      padding: 1rem 1.2rem;
+      border: 2px solid rgba(184, 122, 74, 0.2);
+      border-radius: 12px;
+      background: #fffef9;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .track-input-group input:focus {
+      outline: none;
+      border-color: var(--tone-mid);
+      box-shadow: 0 0 0 4px rgba(184, 122, 74, 0.15);
+    }
+    .track-status-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      padding: 2rem;
+      box-shadow: var(--shadow-glass);
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .track-status-card.show {
+      display: block;
+      animation: slideInUp 0.4s ease;
+    }
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .status-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(184, 122, 74, 0.15);
+    }
+    .order-id-display {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--tone-dark);
+      letter-spacing: 0.1em;
+      font-family: "Inter", monospace;
+    }
+    .status-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .status-badge.pending {
+      background: rgba(255, 193, 7, 0.2);
+      color: #f57c00;
+    }
+    .status-badge.processing {
+      background: rgba(33, 150, 243, 0.2);
+      color: #1976d2;
+    }
+    .status-badge.shipped {
+      background: rgba(156, 39, 176, 0.2);
+      color: #7b1fa2;
+    }
+    .status-badge.delivered {
+      background: rgba(76, 175, 80, 0.2);
+      color: #388e3c;
+    }
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 0.5rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(184, 122, 74, 0.2);
+    }
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.5rem;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -1.75rem;
+      top: 0.25rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--tone-mid);
+      border: 3px solid var(--bg-glass);
+      box-shadow: 0 0 0 2px var(--tone-mid);
+    }
+    .timeline-item.active::before {
+      background: var(--tone-accent);
+      box-shadow: 0 0 0 2px var(--tone-accent), 0 0 12px rgba(212, 168, 116, 0.5);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+    }
+    .timeline-item.completed::before {
+      background: #27ae60;
+      box-shadow: 0 0 0 2px #27ae60;
+    }
+    .timeline-date {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .timeline-text {
+      font-weight: 500;
+      color: var(--tone-dark);
+    }
+    .track-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .recent-orders {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      padding: 2rem;
+      box-shadow: var(--shadow-glass);
+    }
+    .recent-orders h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-family: "Playfair Display", serif;
+    }
+    .order-item {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 12px;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .order-item:hover {
+      border-color: var(--tone-mid);
+      transform: translateX(4px);
+    }
+    .order-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .order-item-id {
+      font-weight: 700;
+      color: var(--tone-dark);
+      font-family: "Inter", monospace;
+    }
+    .order-item-date {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+  <div class="motif-strip"></div>
+  <div class="container">
+    <div class="nav">
+      <a class="logo" href="index.html">
+        <div class="logo-icon"></div>
+        <div>
+          <div class="logo-text-main">Borneology</div>
+          <div class="logo-text-sub">Sarawak Handicrafts</div>
+        </div>
+      </a>
+      
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop Now</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      
+      <div class="nav-utility">
+        <button class="icon-btn" data-counter="wishlist" id="wishlistBtn" title="Wishlist">♡<span>0</span></button>
+        <button class="icon-btn" data-counter="cart" id="cartBtn" title="Cart">🛒<span>0</span></button>
+        <a href="track-order.html" class="icon-btn-track" title="Track Order"></a>
+        <div class="profile-trigger" id="profileTrigger">
+          <img src="" alt="Profile" id="navAvatar" />
+          <span>Profile</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle">Menu</button>
+      </div>
+    </div>
+    
+    <div class="profile-menu" id="profileMenu">
+      <a href="profile.html">My profile</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="checkout.html">Checkout</a>
+      <a href="track-order.html" class="track-order-link">📦 Track Order</a>
+      <a href="login.html">Login / Logout</a>
+    </div>
+    
+    <nav class="nav-drawer" id="navDrawer">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop Now</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+  <main>
+    <section>
+      <div class="container">
+        <div class="track-hero">
+          <h1>Track Your Parcel</h1>
+          <p>Follow your handcrafted treasures from Sarawak to your doorstep</p>
+        </div>
+
+        <div class="track-input-section">
+          <h3 style="margin-top:0; font-family:'Playfair Display',serif;">Enter Order ID</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:0;">Enter your order ID (e.g., BOR-1024, BOR-2042, BOR-3105) to track your shipment</p>
+          <div class="track-input-group">
+            <input type="text" id="orderIdInput" placeholder="BOR-XXXX" maxlength="10" />
+            <button class="btn btn-primary" id="trackBtn" style="padding:1rem 2rem;">Track Order</button>
+          </div>
+        </div>
+
+        <div class="track-status-card" id="statusCard">
+          <div class="status-header">
+            <div class="order-id-display" id="displayOrderId"></div>
+            <div class="status-badge" id="statusBadge"></div>
+          </div>
+          <div class="timeline" id="timeline"></div>
+          <div class="track-actions">
+            <button class="btn btn-outline" onclick="window.print()">Print Details</button>
+            <button class="btn btn-outline" id="shareBtn">Share Status</button>
+            <a href="checkout.html" class="btn btn-primary">View Order</a>
+          </div>
+        </div>
+
+        <div class="recent-orders">
+          <h3>Recent Orders</h3>
+          <div id="recentOrdersList">
+            <p style="color:var(--text-muted); text-align:center; padding:1rem;">No recent orders found</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Borneology – Track your Sarawak treasures with ease.
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // Require login for track order page
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (!isLoggedIn || isLoggedIn !== "true") {
+      alert("Please login to track your orders");
+      window.location.href = "login.html?redirect=track-order.html";
+    }
+    const trackingData = {
+      "BOR-1024": {
+        status: "delivered",
+        statusText: "Delivered",
+        timeline: [
+          { date: "2025-01-15", text: "Order placed", completed: true },
+          { date: "2025-01-16", text: "Order confirmed • Payment received", completed: true },
+          { date: "2025-01-17", text: "Parcel packed • Ready to ship", completed: true },
+          { date: "2025-01-18", text: "In transit • Kuching hub", completed: true },
+          { date: "2025-01-20", text: "Out for delivery", completed: true },
+          { date: "2025-01-20", text: "Delivered successfully", completed: true, active: true }
+        ]
+      },
+      "BOR-2042": {
+        status: "shipped",
+        statusText: "In Transit",
+        timeline: [
+          { date: "2025-01-18", text: "Order placed", completed: true },
+          { date: "2025-01-19", text: "Order confirmed • Payment received", completed: true },
+          { date: "2025-01-20", text: "Parcel packed • Ready to ship", completed: true },
+          { date: "2025-01-21", text: "In transit • Kuala Lumpur sorting center", completed: true, active: true },
+          { date: "2025-01-23", text: "Expected delivery", completed: false },
+          { date: "2025-01-23", text: "Out for delivery", completed: false }
+        ]
+      },
+      "BOR-3105": {
+        status: "processing",
+        statusText: "Processing",
+        timeline: [
+          { date: "2025-01-22", text: "Order placed", completed: true },
+          { date: "2025-01-22", text: "Order confirmed • Payment received", completed: true, active: true },
+          { date: "2025-01-23", text: "Parcel packed • Ready to ship", completed: false },
+          { date: "2025-01-24", text: "In transit", completed: false },
+          { date: "2025-01-26", text: "Expected delivery", completed: false }
+        ]
+      }
+    };
+
+    function renderTimeline(timeline) {
+      return timeline.map(item => {
+        const classes = [];
+        if (item.completed) classes.push("completed");
+        if (item.active) classes.push("active");
+        return `
+          <div class="timeline-item ${classes.join(" ")}">
+            <div class="timeline-date">${item.date}</div>
+            <div class="timeline-text">${item.text}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function getStatusBadgeClass(status) {
+      const map = {
+        "pending": "pending",
+        "processing": "processing",
+        "shipped": "shipped",
+        "delivered": "delivered"
+      };
+      return map[status] || "pending";
+    }
+
+    document.getElementById("trackBtn").addEventListener("click", () => {
+      const orderId = document.getElementById("orderIdInput").value.trim().toUpperCase();
+      const statusCard = document.getElementById("statusCard");
+      const data = trackingData[orderId];
+      
+      if (data) {
+        document.getElementById("displayOrderId").textContent = orderId;
+        document.getElementById("statusBadge").textContent = data.statusText;
+        document.getElementById("statusBadge").className = `status-badge ${getStatusBadgeClass(data.status)}`;
+        document.getElementById("timeline").innerHTML = renderTimeline(data.timeline);
+        statusCard.classList.add("show");
+        showToast(`Order ${orderId} found!`);
+      } else {
+        showToast("Order ID not found. Try: BOR-1024, BOR-2042, or BOR-3105");
+        statusCard.classList.remove("show");
+      }
+    });
+
+    document.getElementById("orderIdInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        document.getElementById("trackBtn").click();
+      }
+    });
+
+    document.getElementById("shareBtn").addEventListener("click", () => {
+      const orderId = document.getElementById("displayOrderId").textContent;
+      if (orderId && navigator.share) {
+        navigator.share({
+          title: `Track Order ${orderId}`,
+          text: `Track my Borneology order ${orderId}`,
+          url: window.location.href
+        });
+      } else {
+        const url = window.location.href + "?order=" + orderId;
+        navigator.clipboard.writeText(url);
+        showToast("Tracking link copied to clipboard!");
+      }
+    });
+
+    // Load recent orders from localStorage
+    function loadRecentOrders() {
+      const recentOrders = JSON.parse(localStorage.getItem("recentOrders") || "[]");
+      const list = document.getElementById("recentOrdersList");
+      
+      if (recentOrders.length === 0) {
+        list.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:1rem;">No recent orders found</p>';
+        return;
+      }
+      
+      list.innerHTML = recentOrders.map(order => `
+        <div class="order-item" onclick="trackOrder('${order.id}')">
+          <div class="order-item-header">
+            <span class="order-item-id">${order.id}</span>
+            <span class="order-item-date">${order.date}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function trackOrder(orderId) {
+      document.getElementById("orderIdInput").value = orderId;
+      document.getElementById("trackBtn").click();
+    }
+
+    window.trackOrder = trackOrder;
+    loadRecentOrders();
+  </script>
+</body>
+</html>
+

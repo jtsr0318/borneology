@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Product Images - Borneology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    .instructions {
+      background: #e3f2fd;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .instructions ol {
+      margin-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .instructions li {
+      margin-bottom: 0.5rem;
+    }
+    .upload-area {
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .upload-area:hover {
+      border-color: #b87a4a;
+      background: #fafafa;
+    }
+    .upload-area.dragover {
+      border-color: #b87a4a;
+      background: #fff5e6;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .file-list {
+      margin-top: 1rem;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem;
+      background: #f9f9f9;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    .file-item input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-right: 0.5rem;
+    }
+    .file-item .remove {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn {
+      background: #b87a4a;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      width: 100%;
+    }
+    .btn:hover {
+      background: #9d6840;
+    }
+    .btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .status {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 6px;
+      display: none;
+    }
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      display: block;
+    }
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      display: block;
+    }
+    .preview {
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 4px;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📸 Upload Product Images</h1>
+    
+    <div class="instructions">
+      <strong>简单步骤：</strong>
+      <ol>
+        <li>将产品图片文件拖放到下方区域，或点击选择文件</li>
+        <li>为每个图片输入对应的产品名称（例如：Pua Kumbu）</li>
+        <li>点击"上传并重命名"按钮</li>
+        <li>图片会自动重命名为产品名称并保存到 uploads/ 文件夹</li>
+        <li>然后运行更新脚本更新数据库中的产品图片路径</li>
+      </ol>
+      <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+        <strong>提示：</strong> 图片名称会自动转换为小写，空格和特殊字符会被替换为连字符（-）
+      </p>
+    </div>
+
+    <div class="upload-area" id="uploadArea">
+      <p>📁 拖放图片到这里，或点击选择文件</p>
+      <input type="file" id="fileInput" multiple accept="image/*">
+    </div>
+
+    <div class="file-list" id="fileList"></div>
+
+    <button class="btn" id="uploadBtn" disabled>上传并重命名</button>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const status = document.getElementById('status');
+    
+    let files = [];
+
+    // Click to select files
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    function handleFiles(fileList) {
+      Array.from(fileList).forEach(file => {
+        if (file.type.startsWith('image/')) {
+          files.push({
+            file: file,
+            name: file.name.replace(/\.[^/.]+$/, '') // Remove extension
+          });
+        }
+      });
+      renderFileList();
+    }
+
+    function renderFileList() {
+      fileList.innerHTML = '';
+      files.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(item.file);
+        img.className = 'preview';
+        img.onload = () => URL.revokeObjectURL(img.src);
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = '输入产品名称（例如：Pua Kumbu）';
+        input.value = item.name;
+        input.addEventListener('input', (e) => {
+          files[index].name = e.target.value;
+        });
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = '删除';
+        removeBtn.className = 'remove';
+        removeBtn.onclick = () => {
+          files.splice(index, 1);
+          renderFileList();
+        };
+        
+        div.appendChild(img);
+        div.appendChild(input);
+        div.appendChild(removeBtn);
+        fileList.appendChild(div);
+      });
+      
+      uploadBtn.disabled = files.length === 0;
+    }
+
+    uploadBtn.addEventListener('click', async () => {
+      if (files.length === 0) return;
+      
+      uploadBtn.disabled = true;
+      uploadBtn.textContent = '上传中...';
+      status.className = 'status';
+      
+      try {
+        const formData = new FormData();
+        
+        files.forEach(item => {
+          if (!item.name.trim()) {
+            throw new Error('请为所有图片输入产品名称');
+          }
+          formData.append('files', item.file);
+          formData.append('names', item.name);
+        });
+        
+        const response = await fetch('/api/admin/upload-product-images', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          status.className = 'status success';
+          status.innerHTML = `✅ 成功上传 ${result.uploaded.length} 张图片！<br><br>已上传的文件：<br>${result.uploaded.map(f => `• ${f.original} → ${f.renamed}`).join('<br>')}`;
+          files = [];
+          renderFileList();
+          fileInput.value = '';
+        } else {
+          throw new Error(result.error || '上传失败');
+        }
+      } catch (error) {
+        status.className = 'status error';
+        status.textContent = '❌ 错误: ' + error.message;
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = '上传并重命名';
+      }
+    });
+  </script>
+</body>
+</html>
+

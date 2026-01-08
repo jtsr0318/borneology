@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Borneology – Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="hornbill.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+  <div class="motif-strip"></div>
+  <div class="container">
+    <div class="nav">
+      <div class="nav-left">
+        <a class="logo" href="index.html">
+          <div class="logo-icon"></div>
+          <div>
+            <div class="logo-text-main">Borneology</div>
+            <div class="logo-text-sub">Sarawak Handicrafts</div>
+          </div>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html" class="active">Home</a>
+          <a href="shop.html">Shop Now</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      
+      <div class="nav-utility">
+        <button class="icon-btn" data-counter="wishlist" id="wishlistBtn" title="Wishlist">♡<span>0</span></button>
+        <button class="icon-btn" data-counter="cart" id="cartBtn" title="Cart">🛒<span>0</span></button>
+        <a href="track-order.html" class="icon-btn-track" title="Track Order"></a>
+        <div class="profile-trigger" id="profileTrigger">
+          <img src="" alt="Profile" id="navAvatar" />
+          <span>Profile</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle">Menu</button>
+      </div>
+    </div>
+    
+    <div class="profile-menu" id="profileMenu">
+      <a href="profile.html">My profile</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="checkout.html">Checkout</a>
+      <a href="track-order.html" class="track-order-link">📦 Track Order</a>
+      <a href="login.html">Login / Logout</a>
+    </div>
+    
+    <nav class="nav-drawer" id="navDrawer">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop Now</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+  <main>
+    <section>
+      <div class="container">
+        <div class="section-title">My Profile</div>
+        <div class="profile-grid">
+          <div class="profile-card">
+            <h3>Avatar</h3>
+            <div class="avatar-upload">
+              <div id="avatarContainer" style="width:110px; height:110px; border-radius:50%; overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--bg-glass); border:2px solid var(--glass-border);">
+                <img src="" alt="Avatar" id="profileAvatar" style="width:100%; height:100%; object-fit:cover; display:none;" />
+                <div id="defaultAvatarIcon" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; font-weight:600; color:var(--tone-dark);"></div>
+              </div>
+              <div style="margin-top:1rem;">
+                <button class="btn btn-outline" id="uploadAvatar">Upload Photo</button>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.5rem;">PNG/JPG · Max 2MB</p>
+              </div>
+            </div>
+            <!-- Replace the profile form section with this -->
+<div class="profile-settings">
+  <form id="profileForm">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input id="fullName" required placeholder="Your full name" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" required placeholder="your.email@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input id="phone" placeholder="+60 12 345 6789" />
+      </div>
+      <div class="form-group">
+        <label for="language">Language</label>
+        <select id="language">
+          <option value="English">English</option>
+          <option value="Malay">Malay</option>
+          <option value="Chinese">Chinese</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="shipping">Shipping Address</label>
+      <textarea id="shipping" rows="3" placeholder="Enter your full shipping address"></textarea>
+    </div>
+      <div class="form-group">
+        <label for="currency">Preferred Currency</label>
+        <select id="currency">
+          <option value="MYR">MYR</option>
+          <option value="USD">USD</option>
+          <option value="SGD">SGD</option>
+        </select>
+      </div>
+    <button class="btn btn-primary btn-wide">Save Profile</button>
+  </form>
+</div>
+          </div>
+
+          <div class="profile-card">
+            <h3>Seller Verification</h3>
+            <div id="sellerVerificationSection">
+              <div id="sellerStatusDisplay"></div>
+              <div id="sellerProgressBar" style="display:none; margin:1rem 0;">
+                <div style="background:var(--bg-glass); border-radius:8px; padding:1rem; margin-bottom:0.5rem;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                    <span style="font-weight:600;">Verification Progress</span>
+                    <span id="verificationPercentage" style="color:var(--tone-mid);">0%</span>
+                  </div>
+                  <div style="background:rgba(0,0,0,0.1); border-radius:999px; height:8px; overflow:hidden;">
+                    <div id="verificationProgressFill" style="background:linear-gradient(90deg, var(--tone-mid), var(--tone-dark)); height:100%; width:0%; transition:width 0.3s;"></div>
+                  </div>
+                  <div id="verificationStatusText" style="margin-top:0.5rem; font-size:0.85rem; color:var(--text-muted);"></div>
+                </div>
+              </div>
+              <button class="btn btn-primary" id="applySellerBtn" style="display:none;">Apply to Become a Seller</button>
+              <button class="btn btn-outline" id="viewSellerDashboardBtn" style="display:none; margin-top:0.5rem;">Go to Seller Dashboard</button>
+            </div>
+            <hr style="margin:2rem 0; border:none; border-top:1px solid rgba(0,0,0,0.1);" />
+            <h3>Account & Preferences</h3>
+            <form>
+              <div class="form-group">
+                <label for="language2">Language</label>
+                <select id="language2">
+                  <option value="English">English</option>
+                  <option value="Malay">Malay</option>
+                  <option value="Chinese">Chinese</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="currency2">Preferred currency</label>
+                <select id="currency2">
+                  <option value="MYR">MYR</option>
+                  <option value="USD">USD</option>
+                  <option value="SGD">SGD</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="password">Change password</label>
+                <input id="password" type="password" placeholder="New password" />
+              </div>
+              <button class="btn btn-outline">Update preferences</button>
+            </form>
+
+            <div style="margin-top:2rem;">
+              <h3>Orders</h3>
+              <p style="color:var(--text-muted); font-size:0.9rem;">Use your order ID to track deliveries.</p>
+              <div class="form-group">
+                <label for="orderIdProfile">Order ID</label>
+                <input id="orderIdProfile" placeholder="BOR-1024" />
+              </div>
+              <button class="btn btn-primary" id="trackFromProfile">Track parcel</button>
+              <p id="profileTrackResult" style="color:var(--text-muted); margin-top:0.8rem;">Awaiting ID…</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Borneology – Your Sarawak craft identity.
+  </footer>
+
+  <script src="app-backend.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Require login for profile page
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (!isLoggedIn || isLoggedIn !== "true") {
+      alert("Please login to view your profile");
+      window.location.href = "login.html?redirect=profile.html";
+    }
+
+    // Load user profile data
+    async function loadUserProfile() {
+      const userId = localStorage.getItem('userId');
+      if (!userId || !window.API) return;
+      
+      try {
+        const userData = await window.API.getUser(userId);
+        
+        // Populate form fields
+        if (userData.name) document.getElementById("fullName").value = userData.name;
+        if (userData.email) document.getElementById("email").value = userData.email;
+        if (userData.phone) document.getElementById("phone").value = userData.phone;
+        if (userData.language) document.getElementById("language").value = userData.language;
+        if (userData.currency) document.getElementById("currency").value = userData.currency;
+        if (userData.shippingAddress) document.getElementById("shipping").value = userData.shippingAddress;
+        
+        // Update avatar display
+        const avatarImg = document.getElementById("profileAvatar");
+        const defaultIcon = document.getElementById("defaultAvatarIcon");
+        const userName = userData.name || 'User';
+        const initial = userName.charAt(0).toUpperCase();
+        
+        if (userData.avatar && userData.avatar.trim() !== '') {
+          // User has uploaded avatar
+          avatarImg.src = userData.avatar;
+          avatarImg.style.display = 'block';
+          if (defaultIcon) defaultIcon.style.display = 'none';
+        } else {
+          // Show default icon with user initial
+          avatarImg.style.display = 'none';
+          if (defaultIcon) {
+            defaultIcon.textContent = initial;
+            defaultIcon.style.display = 'flex';
+          }
+        }
+        
+        // Update localStorage user data
+        localStorage.setItem('user', JSON.stringify(userData));
+      } catch (error) {
+        console.error('Failed to load user profile:', error);
+        // Fallback to localStorage
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        if (user.name) document.getElementById("fullName").value = user.name;
+        if (user.email) document.getElementById("email").value = user.email;
+      }
+    }
+
+    // Avatar upload
+    const avatarBtn = document.getElementById("uploadAvatar");
+    const avatarInput = document.createElement("input");
+    avatarInput.type = "file";
+    avatarInput.accept = "image/*";
+    avatarInput.style.display = "none";
+    document.body.appendChild(avatarInput);
+
+    if (avatarBtn) {
+      avatarBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        avatarInput.click();
+      });
+    }
+
+    avatarInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      // Validate file size (2MB max)
+      if (file.size > 2 * 1024 * 1024) {
+        showToast("File size must be less than 2MB");
+        return;
+      }
+      
+      const userId = localStorage.getItem('userId');
+      if (!userId || !window.API) {
+        showToast("Please login to upload avatar");
+        return;
+      }
+      
+      try {
+        avatarBtn.disabled = true;
+        avatarBtn.textContent = "Uploading...";
+        
+        const result = await window.API.uploadAvatar(userId, file);
+        
+        if (result.success) {
+          const avatarImg = document.getElementById("profileAvatar");
+          const defaultIcon = document.getElementById("defaultAvatarIcon");
+          
+          avatarImg.src = result.avatar;
+          avatarImg.style.display = 'block';
+          if (defaultIcon) defaultIcon.style.display = 'none';
+          
+          // Update nav avatar
+          const navAvatar = document.querySelector("#profileTrigger img");
+          if (navAvatar) navAvatar.src = result.avatar;
+          
+          // Update user data
+          const user = JSON.parse(localStorage.getItem("user") || "{}");
+          user.avatar = result.avatar;
+          localStorage.setItem('user', JSON.stringify(user));
+          
+          showToast("Avatar uploaded successfully!");
+        } else {
+          showToast("Failed to upload avatar");
+        }
+      } catch (error) {
+        console.error('Avatar upload error:', error);
+        showToast("Failed to upload avatar. Please try again.");
+      } finally {
+        avatarBtn.disabled = false;
+        avatarBtn.textContent = "Upload Photo";
+        avatarInput.value = "";
+      }
+    });
+
+    // Profile form submission
+    const profileForm = document.getElementById("profileForm");
+    if (profileForm) {
+      profileForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const userId = localStorage.getItem('userId');
+        if (!userId || !window.API) {
+          showToast("Please login to save profile");
+          return;
+        }
+        
+        const profileData = {
+          name: document.getElementById("fullName").value,
+          email: document.getElementById("email").value,
+          phone: document.getElementById("phone").value,
+          language: document.getElementById("language").value,
+          currency: document.getElementById("currency").value,
+          shippingAddress: document.getElementById("shipping").value
+        };
+        
+        try {
+          const result = await window.API.updateUser(userId, profileData);
+          if (result.success) {
+            showToast("Profile saved successfully!");
+            
+            // Update localStorage
+            const user = JSON.parse(localStorage.getItem("user") || "{}");
+            Object.assign(user, profileData);
+            localStorage.setItem('user', JSON.stringify(user));
+          } else {
+            showToast("Failed to save profile");
+          }
+        } catch (error) {
+          console.error('Profile update error:', error);
+          showToast("Failed to save profile. Please try again.");
+        }
+      });
+    }
+
+    // Track order from profile
+    const trackBtn = document.getElementById("trackFromProfile");
+    const trackInput = document.getElementById("orderIdProfile");
+    const trackResult = document.getElementById("profileTrackResult");
+    
+    if (trackBtn && trackInput && trackResult) {
+      trackBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const orderId = trackInput.value.trim().toUpperCase();
+        if (!orderId) {
+          trackResult.textContent = "Please enter an order ID";
+          return;
+        }
+        
+        try {
+          if (window.API) {
+            const order = await window.API.trackOrder(orderId);
+            if (order && order.status) {
+              trackResult.textContent = `${order.orderId || orderId}: ${order.statusText || order.status}`;
+            } else {
+              trackResult.textContent = "Order ID not found.";
+            }
+          } else {
+            // Fallback
+            const sampleStatus = {
+              "BOR-1024": "Out for delivery – Kuching hub",
+              "BOR-2042": "In transit – Kuala Lumpur sorting center",
+              "BOR-3105": "Order packed – ready to ship",
+            };
+            trackResult.textContent = sampleStatus[orderId] ? `${orderId}: ${sampleStatus[orderId]}` : "Order ID not found.";
+          }
+        } catch (error) {
+          console.error('Track order error:', error);
+          trackResult.textContent = "Failed to track order. Please try again.";
+        }
+      });
+    }
+
+    // Load seller verification status
+    async function loadSellerStatus() {
+      const userId = localStorage.getItem('userId');
+      if (!userId || !window.API) return;
+
+      try {
+        const response = await fetch(`/api/seller/status/${userId}`);
+        const statusData = await response.json();
+        
+        const statusDisplay = document.getElementById('sellerStatusDisplay');
+        const progressBar = document.getElementById('sellerProgressBar');
+        const applyBtn = document.getElementById('applySellerBtn');
+        const viewDashboardBtn = document.getElementById('viewSellerDashboardBtn');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        // Calculate progress percentage based on status
+        let progress = 0;
+        let statusText = '';
+        let statusColor = '';
+
+        if (user.role === 'seller' && statusData.isVerifiedSeller) {
+          // Verified seller
+          statusDisplay.innerHTML = '<div style="color:#10b981; font-weight:600; display:flex; align-items:center; gap:0.5rem;"><span style="font-size:1.2em;">✓</span> Verified Seller <span style="background:#10b981; color:white; padding:0.15rem 0.5rem; border-radius:999px; font-size:0.75em; margin-left:0.5rem;">✓ VERIFIED</span></div>';
+          progress = 100;
+          statusText = 'Congratulations! You are now a verified seller. You can start selling your products.';
+          statusColor = '#10b981';
+          progressBar.style.display = 'block';
+          viewDashboardBtn.style.display = 'inline-flex';
+          viewDashboardBtn.addEventListener('click', () => {
+            window.location.href = 'seller-dashboard.html';
+          });
+          
+          // Add tutorial link for newly verified sellers
+          const tutorialLink = document.createElement('a');
+          tutorialLink.href = 'seller-tutorial.html';
+          tutorialLink.className = 'btn btn-outline';
+          tutorialLink.style.marginTop = '0.5rem';
+          tutorialLink.style.display = 'inline-flex';
+          tutorialLink.textContent = '📚 View Seller Tutorial';
+          const existingTutorial = document.getElementById('sellerTutorialLink');
+          if (!existingTutorial) {
+            tutorialLink.id = 'sellerTutorialLink';
+            viewDashboardBtn.parentElement.appendChild(tutorialLink);
+          }
+        } else if (statusData.status === 'pending') {
+          // Application pending review
+          statusDisplay.innerHTML = '<div style="color:#f59e0b; font-weight:600; display:flex; align-items:center; gap:0.5rem;"><span style="font-size:1.2em;">⏳</span> Verification Pending</div>';
+          progress = 50;
+          statusText = 'Your application is under review. We will notify you once it\'s processed (typically 3-5 business days).';
+          statusColor = '#f59e0b';
+          progressBar.style.display = 'block';
+        } else if (statusData.status === 'approved') {
+          // Approved but not yet verified (shouldn't happen, but handle it)
+          statusDisplay.innerHTML = '<div style="color:#10b981; font-weight:600;">✓ Verification Approved</div>';
+          progress = 100;
+          statusText = 'Congratulations! You are now a verified seller.';
+          statusColor = '#10b981';
+          progressBar.style.display = 'block';
+        } else if (statusData.status === 'rejected') {
+          // Application rejected
+          statusDisplay.innerHTML = '<div style="color:#ef4444; font-weight:600; display:flex; align-items:center; gap:0.5rem;"><span style="font-size:1.2em;">✗</span> Verification Rejected</div>';
+          progress = 0;
+          statusText = 'Your application was rejected. Please review your documents and contact support if you have questions. You can reapply.';
+          statusColor = '#ef4444';
+          progressBar.style.display = 'block';
+          applyBtn.style.display = 'inline-flex';
+        } else {
+          // Not applied yet
+          if (user.role !== 'seller' && user.role !== 'admin') {
+            statusDisplay.innerHTML = '<div style="color:var(--text-muted);">Not yet applied</div>';
+            applyBtn.style.display = 'inline-flex';
+          }
+        }
+
+        // Update progress bar
+        if (progressBar.style.display !== 'none') {
+          document.getElementById('verificationPercentage').textContent = `${progress}%`;
+          document.getElementById('verificationProgressFill').style.width = `${progress}%`;
+          document.getElementById('verificationStatusText').textContent = statusText;
+          document.getElementById('verificationProgressFill').style.background = `linear-gradient(90deg, ${statusColor}, ${statusColor}dd)`;
+        }
+
+        if (applyBtn.style.display !== 'none') {
+          applyBtn.addEventListener('click', () => {
+            window.location.href = 'seller-application.html';
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load seller status:', error);
+      }
+    }
+
+    // Load profile on page load
+    loadUserProfile();
+    
+    // Check if we just submitted seller application
+    const justSubmitted = sessionStorage.getItem('seller_application_submitted');
+    if (justSubmitted === 'true') {
+      // Clear the flag
+      sessionStorage.removeItem('seller_application_submitted');
+      
+      // Scroll to seller verification section
+      setTimeout(() => {
+        const verificationSection = document.getElementById('sellerVerificationSection');
+        if (verificationSection) {
+          verificationSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500);
+      
+      // Show notification
+      setTimeout(() => {
+        if (typeof showToast === 'function') {
+          showToast("📋 Your application is now under review! Check the progress bar below.", 'info', 5000);
+        }
+      }, 1000);
+    }
+    
+    // Load seller status (this will show the progress bar)
+    loadSellerStatus();
+  </script>
+</body>
+</html>

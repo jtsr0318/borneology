@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Become a Seller – Borneology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="hornbill.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .application-hero {
+      background: linear-gradient(135deg, rgba(184,122,74,0.1), rgba(60,38,25,0.05));
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .application-hero h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 2.5rem;
+      color: var(--tone-dark);
+      margin-bottom: 1rem;
+    }
+    .document-upload {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .document-upload label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--tone-dark);
+    }
+    .document-upload .required {
+      color: #ef4444;
+    }
+    .document-upload input[type="file"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      margin-bottom: 0.5rem;
+    }
+    .document-upload .file-info {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .document-upload .file-preview {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: rgba(184,122,74,0.1);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: var(--tone-mid);
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="motif-strip"></div>
+    <div class="container">
+      <div class="nav">
+        <div class="nav-left">
+          <a class="logo" href="index.html">
+            <div class="logo-icon"></div>
+            <div>
+              <div class="logo-text-main">Borneology</div>
+              <div class="logo-text-sub">Sarawak Handicrafts</div>
+            </div>
+          </a>
+          <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop Now</a>
+            <a href="contact.html">Contact</a>
+          </nav>
+        </div>
+        
+        <div class="nav-utility">
+          <button class="icon-btn" data-counter="wishlist" id="wishlistBtn">♡<span>0</span></button>
+          <button class="icon-btn" data-counter="cart" id="cartBtn">🛒<span>0</span></button>
+          <div class="profile-trigger" id="profileTrigger">
+            <img src="" alt="Profile" id="navAvatar" />
+            <span>Profile</span>
+          </div>
+          <button class="menu-toggle" id="menuToggle">Menu</button>
+        </div>
+      </div>
+      
+      <div class="profile-menu" id="profileMenu">
+        <a href="profile.html">My profile</a>
+        <a href="wishlist.html">Wishlist</a>
+        <a href="checkout.html">Checkout</a>
+        <a href="login.html">Login / Logout</a>
+      </div>
+      
+      <nav class="nav-drawer" id="navDrawer">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop Now</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="container">
+        <div class="application-hero">
+          <h1>Become a Verified Seller</h1>
+          <p style="color:var(--text-muted); font-size:1.1rem; max-width:600px; margin:0 auto;">
+            Join our community of Sarawak artisans. Share your handcrafted treasures with the world. 
+            Please submit the required documents to start your seller journey.
+          </p>
+        </div>
+
+        <form id="sellerApplicationForm" style="max-width:800px; margin:0 auto;">
+          <div class="document-upload">
+            <label for="businessLicense">
+              Business License / Registration Document <span class="required">*</span>
+            </label>
+            <input type="file" id="businessLicense" name="businessLicense" accept=".pdf,.jpg,.jpeg,.png" required />
+            <div class="file-info">PDF, JPG, or PNG (Max 5MB)</div>
+            <div class="file-preview" id="businessLicensePreview" style="display:none;"></div>
+          </div>
+
+          <div class="document-upload">
+            <label for="identityDocument">
+              Identity Document (IC/Passport) <span class="required">*</span>
+            </label>
+            <input type="file" id="identityDocument" name="identityDocument" accept=".pdf,.jpg,.jpeg,.png" required />
+            <div class="file-info">PDF, JPG, or PNG (Max 5MB)</div>
+            <div class="file-preview" id="identityDocumentPreview" style="display:none;"></div>
+          </div>
+
+          <div class="document-upload">
+            <label for="taxDocument">
+              Tax Registration Document <span class="required">*</span>
+            </label>
+            <input type="file" id="taxDocument" name="taxDocument" accept=".pdf,.jpg,.jpeg,.png" required />
+            <div class="file-info">PDF, JPG, or PNG (Max 5MB)</div>
+            <div class="file-preview" id="taxDocumentPreview" style="display:none;"></div>
+          </div>
+
+          <div class="document-upload">
+            <label for="portfolio">
+              Portfolio / Sample Works <span class="required">*</span>
+            </label>
+            <input type="file" id="portfolio" name="portfolio" accept=".pdf,.jpg,.jpeg,.png" required />
+            <div class="file-info">PDF, JPG, or PNG (Max 5MB) - Showcase your craftsmanship</div>
+            <div class="file-preview" id="portfolioPreview" style="display:none;"></div>
+          </div>
+
+          <div class="document-upload">
+            <label for="additionalDocument">
+              Additional Supporting Documents (Optional)
+            </label>
+            <input type="file" id="additionalDocument" name="additionalDocument" accept=".pdf,.jpg,.jpeg,.png" />
+            <div class="file-info">Any additional documents that support your application</div>
+            <div class="file-preview" id="additionalDocumentPreview" style="display:none;"></div>
+          </div>
+
+          <div style="margin-top:2rem; padding:1.5rem; background:rgba(184,122,74,0.1); border-radius:12px;">
+            <h3 style="margin-bottom:1rem; font-family:'Playfair Display',serif;">Important Notes</h3>
+            <ul style="color:var(--text-muted); line-height:1.8;">
+              <li>All documents will be reviewed by our admin team</li>
+              <li>Verification typically takes 3-5 business days</li>
+              <li>You will be notified via email once your application is reviewed</li>
+              <li>Make sure all documents are clear and readable</li>
+            </ul>
+          </div>
+
+          <div style="display:flex; gap:1rem; margin-top:2rem;">
+            <button type="submit" class="btn btn-primary btn-wide">Submit Application</button>
+            <a href="profile.html" class="btn btn-outline">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Borneology – Your Sarawak craft identity.
+  </footer>
+
+  <script src="app-backend.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Enhanced showToast function with type support (reusing existing toast from app.js/app-backend.js)
+    (function() {
+      // Store original showToast if it exists
+      const originalShowToast = window.showToast;
+      
+      // Enhanced showToast function with type support
+      window.showToast = function(message, type = 'info', duration = 4000) {
+        // Get existing toast element or create one
+        let toastElement = document.querySelector('.toast');
+        if (!toastElement) {
+          toastElement = document.createElement("div");
+          toastElement.className = "toast";
+          document.body.appendChild(toastElement);
+        }
+        
+        const toast = toastElement;
+        
+        // Remove any existing toast styling
+        toast.className = "toast";
+        if (type === 'success') {
+          toast.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95))';
+          toast.style.color = 'white';
+          toast.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+        } else if (type === 'error') {
+          toast.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95))';
+          toast.style.color = 'white';
+          toast.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+        } else if (type === 'warning') {
+          toast.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.95))';
+          toast.style.color = 'white';
+          toast.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+        } else {
+          toast.style.background = 'var(--bg-glass)';
+          toast.style.color = 'var(--tone-dark)';
+          toast.style.borderColor = 'var(--glass-border)';
+        }
+        
+        toast.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 1.2rem;">${type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warning' ? '⚠' : 'ℹ'}</span>
+            <span>${message}</span>
+          </div>
+        `;
+        toast.classList.add("show");
+        
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, duration);
+      };
+    })();
+
+    // Require login
+    // Check if we've already shown a notification to prevent loops
+    const notificationKey = 'seller_application_notification_shown';
+    const lastNotification = sessionStorage.getItem(notificationKey);
+    const currentTime = Date.now();
+    
+    // Only show notification if we haven't shown one in the last 5 seconds
+    const shouldShowNotification = !lastNotification || (currentTime - parseInt(lastNotification)) > 5000;
+    
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (!isLoggedIn || isLoggedIn !== "true") {
+      if (shouldShowNotification) {
+        showToast("Please login to apply as a seller", 'warning', 3000);
+        sessionStorage.setItem(notificationKey, currentTime.toString());
+        setTimeout(() => {
+          window.location.href = "login.html?redirect=seller-application.html";
+        }, 2000);
+      } else {
+        // Already shown notification, just redirect
+        window.location.href = "login.html?redirect=seller-application.html";
+      }
+    }
+
+    // Check if user is already a verified seller
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const userId = localStorage.getItem("userId");
+    
+    if (user.role === "admin") {
+      // Admin can access - clear notification flag
+      sessionStorage.removeItem(notificationKey);
+    } else if (user.role === "seller" && user.isVerifiedSeller) {
+      // Already a verified seller
+      if (shouldShowNotification) {
+        showToast("You are already a verified seller! Redirecting to dashboard...", 'success', 3000);
+        sessionStorage.setItem(notificationKey, currentTime.toString());
+        setTimeout(() => {
+          window.location.href = "seller-dashboard.html";
+        }, 2000);
+      } else {
+        // Already shown notification, just redirect
+        window.location.href = "seller-dashboard.html";
+      }
+    } else if (user.role === "seller" && !user.isVerifiedSeller) {
+      // Seller but not verified - check status on page load
+      if (userId) {
+        fetch(`/api/seller/status/${userId}`)
+          .then(res => res.json())
+          .then(statusData => {
+            if (statusData.status === 'pending') {
+              // Show success page instead of form
+              showApplicationSubmittedPage();
+            } else if (statusData.status === 'rejected') {
+              // Allow them to reapply if rejected
+              sessionStorage.removeItem(notificationKey);
+            } else {
+              // Allow access if status unknown
+              sessionStorage.removeItem(notificationKey);
+            }
+          })
+          .catch(error => {
+            console.error('Error checking seller status:', error);
+            // Allow access if check fails
+            sessionStorage.removeItem(notificationKey);
+          });
+      }
+    } else {
+      // Not a seller yet - clear notification flag to allow access
+      sessionStorage.removeItem(notificationKey);
+    }
+    
+    // Function to show application submitted success page
+    function showApplicationSubmittedPage() {
+      const formSection = document.querySelector('.application-hero')?.closest('section') || document.querySelector('main');
+      const form = document.getElementById('sellerApplicationForm');
+      
+      if (formSection && form) {
+        // Hide the form
+        form.style.display = 'none';
+        const hero = document.querySelector('.application-hero');
+        if (hero) hero.style.display = 'none';
+        
+        // Create and show success message
+        const successDiv = document.createElement('div');
+        successDiv.className = 'application-success';
+        successDiv.style.cssText = `
+          background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.05));
+          border: 2px solid rgba(16,185,129,0.3);
+          border-radius: 24px;
+          padding: 3rem 2rem;
+          text-align: center;
+          max-width: 600px;
+          margin: 2rem auto;
+          box-shadow: 0 10px 40px rgba(16,185,129,0.2);
+        `;
+        
+        successDiv.innerHTML = `
+          <div style="font-size: 5rem; margin-bottom: 1.5rem;">✅</div>
+          <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--tone-dark); margin-bottom: 1rem;">
+            Application Submitted Successfully!
+          </h1>
+          <div style="background: white; border-radius: 16px; padding: 2rem; margin: 2rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+            <div style="color: var(--text-main); font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+              <p style="margin-bottom: 1rem;">📋 Your seller verification request has been successfully submitted and will be reviewed by our admin team.</p>
+              <p style="margin-bottom: 1rem;"><strong>What happens next?</strong></p>
+              <ul style="text-align: left; display: inline-block; margin: 0; padding-left: 2rem;">
+                <li>Our admin team will review your submitted documents</li>
+                <li>This process typically takes 3-5 business days</li>
+                <li>You'll be notified once your application is reviewed</li>
+              </ul>
+            </div>
+            <div style="background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.1)); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+              <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; color: #92400e; font-weight: 600; margin-bottom: 0.5rem;">
+                <span style="font-size: 1.5rem;">⏳</span>
+                <span style="font-size: 1.1rem;">Status: Pending Review</span>
+              </div>
+              <div style="background: rgba(245,158,11,0.3); border-radius: 999px; height: 8px; overflow: hidden; margin-top: 1rem;">
+                <div style="background: linear-gradient(90deg, #f59e0b, #d97706); height: 100%; width: 50%; transition: width 0.3s;"></div>
+              </div>
+              <div style="margin-top: 0.75rem; font-size: 0.9rem; color: #78350f;">50% Complete - Under Review</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+            <button class="btn btn-primary" onclick="window.location.href='profile.html#seller-verification'" style="background: var(--tone-mid); border: none; padding: 0.75rem 2rem; font-size: 1rem;">
+              📊 View Progress on Profile
+            </button>
+            <button class="btn btn-outline" onclick="window.location.href='index.html'" style="padding: 0.75rem 2rem; font-size: 1rem;">
+              🏠 Return to Home
+            </button>
+          </div>
+          <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(0,0,0,0.1);">
+            <p style="color: var(--text-muted); font-size: 0.9rem;">
+              <strong>Need help?</strong> Contact our support team if you have any questions about your application.
+            </p>
+          </div>
+        `;
+        
+        // Insert success message
+        formSection.insertBefore(successDiv, formSection.firstChild);
+      }
+    }
+    
+    // Check on page load if application is already submitted
+    async function checkApplicationStatusOnLoad() {
+      const userId = localStorage.getItem('userId');
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      
+      if (userId && (user.role === 'seller' || user.sellerVerificationStatus === 'pending')) {
+        try {
+          const response = await fetch(`/api/seller/status/${userId}`);
+          const statusData = await response.json();
+          
+          if (statusData.status === 'pending') {
+            // Application already submitted - show success page
+            showApplicationSubmittedPage();
+          } else if (statusData.status === 'approved' || statusData.isVerifiedSeller) {
+            // Already verified - redirect to dashboard
+            showToast("You are already a verified seller! Redirecting...", 'success', 3000);
+            setTimeout(() => {
+              window.location.href = 'seller-dashboard.html';
+            }, 2000);
+          }
+        } catch (error) {
+          console.error('Error checking application status:', error);
+        }
+      }
+    }
+    
+    // Check status when page loads
+    checkApplicationStatusOnLoad();
+
+    // File preview handlers
+    function setupFilePreview(inputId, previewId) {
+      const input = document.getElementById(inputId);
+      const preview = document.getElementById(previewId);
+      
+      input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          if (file.size > 5 * 1024 * 1024) {
+            showToast(`File size must be less than 5MB for ${inputId}`);
+            input.value = '';
+            preview.style.display = 'none';
+            return;
+          }
+          preview.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+          preview.style.display = 'block';
+        } else {
+          preview.style.display = 'none';
+        }
+      });
+    }
+
+    setupFilePreview('businessLicense', 'businessLicensePreview');
+    setupFilePreview('identityDocument', 'identityDocumentPreview');
+    setupFilePreview('taxDocument', 'taxDocumentPreview');
+    setupFilePreview('portfolio', 'portfolioPreview');
+    setupFilePreview('additionalDocument', 'additionalDocumentPreview');
+
+    // Form submission
+    const form = document.getElementById('sellerApplicationForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        showToast("Please login to submit application");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('userId', userId);
+      
+      const businessLicense = document.getElementById('businessLicense').files[0];
+      const identityDocument = document.getElementById('identityDocument').files[0];
+      const taxDocument = document.getElementById('taxDocument').files[0];
+      const portfolio = document.getElementById('portfolio').files[0];
+      const additionalDocument = document.getElementById('additionalDocument').files[0];
+
+      if (!businessLicense || !identityDocument || !taxDocument || !portfolio) {
+        showToast("Please upload all required documents");
+        return;
+      }
+
+      formData.append('businessLicense', businessLicense);
+      formData.append('identityDocument', identityDocument);
+      formData.append('taxDocument', taxDocument);
+      formData.append('portfolio', portfolio);
+      if (additionalDocument) {
+        formData.append('additionalDocument', additionalDocument);
+      }
+
+      try {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
+        console.log('Submitting form...', { userId, filesCount: formData.getAll('files').length });
+        
+        const response = await fetch('/api/seller/apply', {
+          method: 'POST',
+          body: formData
+        });
+
+        console.log('Response status:', response.status, response.statusText);
+        
+        // Check if response is OK
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Server error response:', errorText);
+          let errorData;
+          try {
+            errorData = JSON.parse(errorText);
+          } catch (e) {
+            errorData = { error: errorText || `Server error: ${response.status} ${response.statusText}` };
+          }
+          throw new Error(errorData.error || `Server error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('Response result:', result);
+
+        if (result.success) {
+          // Update user role to seller in localStorage
+          const user = JSON.parse(localStorage.getItem('user') || '{}');
+          user.role = 'seller';
+          user.sellerVerificationStatus = 'pending';
+          user.isVerifiedSeller = false;
+          localStorage.setItem('user', JSON.stringify(user));
+          
+          // Show success notification
+          showToast("✅ Application submitted successfully!", 'success', 3000);
+          
+          // Show success page immediately instead of redirecting
+          setTimeout(() => {
+            showApplicationSubmittedPage();
+          }, 1500);
+        } else {
+          showToast(result.error || "Failed to submit application", 'error', 3000);
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Application';
+        }
+      } catch (error) {
+        console.error('Application error:', error);
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack,
+          name: error.name
+        });
+        
+        // Show detailed error message
+        let errorMessage = "Failed to submit application. ";
+        if (error.message) {
+          errorMessage += error.message;
+        } else {
+          errorMessage += "Please check your connection and try again.";
+        }
+        
+        showToast(errorMessage, 'error', 5000);
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Application';
+      }
+    });
+  </script>
+</body>
+</html>
+

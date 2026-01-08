@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard – Borneology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="hornbill.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .admin-header {
+      background: linear-gradient(135deg, var(--tone-dark), var(--tone-mid));
+      color: #fef7ec;
+      border-radius: 24px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-glass);
+    }
+    .admin-header h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .admin-tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid rgba(0,0,0,0.1);
+      flex-wrap: wrap;
+    }
+    .admin-tab {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.3s;
+    }
+    .admin-tab:hover {
+      color: var(--tone-dark);
+    }
+    .admin-tab.active {
+      color: var(--tone-dark);
+      border-bottom-color: var(--tone-mid);
+    }
+    .admin-tab-content {
+      display: none !important;
+    }
+    .admin-tab-content.active {
+      display: block !important;
+    }
+    .stat-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-glass);
+    }
+    .stat-card h3 {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .stat-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--tone-dark);
+    }
+    .application-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-glass);
+    }
+    .application-card h3 {
+      font-family: "Playfair Display", serif;
+      color: var(--tone-dark);
+      margin-bottom: 0.5rem;
+    }
+    .document-list a {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: rgba(184,122,74,0.1);
+      border-radius: 6px;
+      margin: 0.25rem;
+      color: var(--tone-mid);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .document-list a:hover {
+      background: rgba(184,122,74,0.2);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-left: 1rem;
+    }
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-approved { background: #d1fae5; color: #065f46; }
+    .status-rejected { background: #fee2e2; color: #991b1b; }
+    .table-container {
+      overflow-x: auto;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-card);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-glass);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table th, table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    table th {
+      font-weight: 600;
+      color: var(--tone-dark);
+      background: rgba(184,122,74,0.1);
+    }
+    .action-btn {
+      padding: 0.25rem 0.75rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      margin: 0 0.25rem;
+    }
+    .btn-approve {
+      background: #10b981;
+      color: white;
+    }
+    .btn-reject {
+      background: #ef4444;
+      color: white;
+    }
+    .btn-delete {
+      background: #f59e0b;
+      color: white;
+    }
+    .quick-action-btn {
+      background: var(--bg-glass);
+      border: 2px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    .quick-action-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .tab-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(239,68,68,0.4);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .admin-tab {
+      position: relative;
+    }
+    #pendingVerificationsCard {
+      animation: highlight 3s infinite;
+    }
+    @keyframes highlight {
+      0%, 100% { box-shadow: var(--shadow-glass); }
+      50% { box-shadow: 0 0 20px rgba(245,158,11,0.4); }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="motif-strip"></div>
+    <div class="container">
+      <div class="nav">
+        <a class="logo" href="index.html">
+          <div class="logo-icon"></div>
+          <div>
+            <div class="logo-text-main">Borneology</div>
+            <div class="logo-text-sub">Admin Panel</div>
+          </div>
+        </a>
+        
+        <nav class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="shop.html">Shop</a>
+        </nav>
+        
+        <div class="nav-utility">
+          <div class="profile-trigger" id="profileTrigger">
+            <img src="" alt="Profile" id="navAvatar" />
+            <span>Admin</span>
+          </div>
+          <button class="menu-toggle" id="menuToggle">Menu</button>
+        </div>
+      </div>
+      
+      <div class="profile-menu" id="profileMenu">
+        <a href="profile.html">My profile</a>
+        <a href="index.html">View Website</a>
+        <a href="login.html">Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <main style="display: block !important; visibility: visible !important;">
+    <section style="display: block !important; visibility: visible !important;">
+      <div class="container" style="display: block !important; visibility: visible !important;">
+        <!-- Top Alert Banner for Pending Verifications -->
+        <div id="pendingVerificationsAlert" style="display:none; background:linear-gradient(135deg, #fef3c7, #fde68a); border:2px solid #f59e0b; border-radius:16px; padding:1.5rem; margin-bottom:2rem; box-shadow:0 4px 20px rgba(245,158,11,0.3);">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+            <div style="display:flex; align-items:center; gap:1rem;">
+              <div style="font-size:2rem;">⚠️</div>
+              <div>
+                <h3 style="font-family:'Playfair Display',serif; font-size:1.25rem; color:#92400e; margin:0 0 0.25rem 0;">Pending Seller Verifications</h3>
+                <p style="color:#78350f; margin:0; font-size:0.95rem;">You have <strong id="pendingCountBadge" style="color:#b45309; font-size:1.1rem;">0</strong> seller verification requests awaiting review</p>
+              </div>
+            </div>
+            <button id="gotoVerificationsBtn" class="btn btn-primary" style="background:#f59e0b; border:none; font-weight:600; padding:0.75rem 1.5rem; white-space:nowrap;">
+              📋 Review Applications Now
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-header">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <h1>🛡️ Admin Control Panel</h1>
+              <p style="opacity:0.9; margin-top:0.5rem;">Complete control over the Borneology platform</p>
+            </div>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="window.location.reload()" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3);">
+                🔄 Refresh Data
+              </button>
+              <button class="btn btn-primary" onclick="exportData()" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3);">
+                📊 Export Reports
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions Panel -->
+        <div style="background:var(--bg-glass); backdrop-filter:blur(20px); border:1px solid var(--glass-border); border-radius:var(--radius-card); padding:1.5rem; margin-bottom:2rem; box-shadow:var(--shadow-glass);">
+          <h3 style="font-family:'Playfair Display',serif; margin-bottom:1rem; color:var(--tone-dark);">⚡ Quick Actions</h3>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
+            <button class="quick-action-btn" data-action="verifications" style="background:linear-gradient(135deg, #fef3c7, #fde68a); border:2px solid #f59e0b; color:#92400e;">
+              <div style="font-size:2rem; margin-bottom:0.5rem;">📋</div>
+              <div style="font-weight:600;">Review Verifications</div>
+              <div style="font-size:0.85rem; opacity:0.8;" id="quickVerificationCount">0 pending</div>
+            </button>
+            <button class="quick-action-btn" data-action="users" style="background:linear-gradient(135deg, #dbeafe, #bfdbfe); border:2px solid #3b82f6; color:#1e40af;">
+              <div style="font-size:2rem; margin-bottom:0.5rem;">👥</div>
+              <div style="font-weight:600;">Manage Users</div>
+              <div style="font-size:0.85rem; opacity:0.8;" id="quickUserCount">0 total</div>
+            </button>
+            <button class="quick-action-btn" data-action="products" style="background:linear-gradient(135deg, #dcfce7, #bbf7d0); border:2px solid #10b981; color:#065f46;">
+              <div style="font-size:2rem; margin-bottom:0.5rem;">📦</div>
+              <div style="font-weight:600;">Manage Products</div>
+              <div style="font-size:0.85rem; opacity:0.8;" id="quickProductCount">0 total</div>
+            </button>
+            <button class="quick-action-btn" data-action="orders" style="background:linear-gradient(135deg, #fce7f3, #fbcfe8); border:2px solid #ec4899; color:#831843;">
+              <div style="font-size:2rem; margin-bottom:0.5rem;">🛒</div>
+              <div style="font-weight:600;">Manage Orders</div>
+              <div style="font-size:0.85rem; opacity:0.8;" id="quickOrderCount">0 total</div>
+            </button>
+            <button class="quick-action-btn" data-action="analytics" style="background:linear-gradient(135deg, #ede9fe, #ddd6fe); border:2px solid #8b5cf6; color:#5b21b6;">
+              <div style="font-size:2rem; margin-bottom:0.5rem;">📈</div>
+              <div style="font-weight:600;">View Analytics</div>
+              <div style="font-size:0.85rem; opacity:0.8;">Reports & Stats</div>
+            </button>
+            <button class="quick-action-btn" data-action="settings" style="background:linear-gradient(135deg, #f3f4f6, #e5e7eb); border:2px solid #6b7280; color:#374151;">
+              <div style="font-size:2rem; margin-bottom:0.5rem;">⚙️</div>
+              <div style="font-weight:600;">System Settings</div>
+              <div style="font-size:0.85rem; opacity:0.8;">Platform Config</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats Overview - Enhanced -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1.5rem; margin-bottom:2rem;">
+          <div class="stat-card" style="background:linear-gradient(135deg, rgba(59,130,246,0.1), rgba(37,99,235,0.05)); border-color:rgba(59,130,246,0.3);">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.5rem;">👥</span>
+              <h3>Total Users</h3>
+            </div>
+            <div class="value" id="totalUsers" style="color:#2563eb;">0</div>
+          </div>
+          <div class="stat-card" style="background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.05)); border-color:rgba(16,185,129,0.3);">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.5rem;">📦</span>
+              <h3>Total Products</h3>
+            </div>
+            <div class="value" id="totalProducts" style="color:#059669;">0</div>
+          </div>
+          <div class="stat-card" style="background:linear-gradient(135deg, rgba(236,72,153,0.1), rgba(219,39,119,0.05)); border-color:rgba(236,72,153,0.3);">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.5rem;">🛒</span>
+              <h3>Total Orders</h3>
+            </div>
+            <div class="value" id="totalOrders" style="color:#db2777;">0</div>
+          </div>
+          <div class="stat-card" style="background:linear-gradient(135deg, rgba(245,158,11,0.2), rgba(217,119,6,0.1)); border-color:rgba(245,158,11,0.4);" id="pendingVerificationsCard">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.5rem;">⚠️</span>
+              <h3>Pending Verifications</h3>
+            </div>
+            <div class="value" id="pendingVerifications" style="color:#d97706; font-size:2.5rem;">0</div>
+            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.5rem;" id="pendingVerificationsSubtext">Awaiting review</div>
+          </div>
+          <div class="stat-card" style="background:linear-gradient(135deg, rgba(139,92,246,0.1), rgba(124,58,237,0.05)); border-color:rgba(139,92,246,0.3);">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.5rem;">✓</span>
+              <h3>Verified Sellers</h3>
+            </div>
+            <div class="value" id="verifiedSellers" style="color:#7c3aed;">0</div>
+          </div>
+        </div>
+
+        <!-- Admin Navigation Tabs - Enhanced -->
+        <div class="admin-tabs" style="background:var(--bg-glass); backdrop-filter:blur(20px); border-radius:12px; padding:1rem; box-shadow:var(--shadow-glass); margin-bottom:2rem;">
+          <button class="admin-tab active" data-tab="applications" style="position:relative;">
+            📋 Seller Applications
+            <span id="applicationsBadge" class="tab-badge" style="display:none; position:absolute; top:-8px; right:-8px; background:#ef4444; color:white; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">0</span>
+          </button>
+          <button class="admin-tab" data-tab="users">👥 User Management</button>
+          <button class="admin-tab" data-tab="products">📦 Product Management</button>
+          <button class="admin-tab" data-tab="orders">🛒 Order Management</button>
+          <button class="admin-tab" data-tab="analytics">📈 Analytics & Reports</button>
+          <button class="admin-tab" data-tab="settings">⚙️ System Settings</button>
+        </div>
+
+        <!-- Seller Applications Tab -->
+        <div id="applicationsTab" class="admin-tab-content active">
+          <h2 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">Seller Applications</h2>
+          <div id="applicationsList">
+            <p style="color:var(--text-muted);">Loading applications...</p>
+          </div>
+        </div>
+
+        <!-- User Management Tab -->
+        <div id="usersTab" class="admin-tab-content">
+          <h2 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">User Management</h2>
+          <div class="table-container">
+            <table id="usersTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Verified Seller</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr><td colspan="6">Loading users...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Product Management Tab -->
+        <div id="productsTab" class="admin-tab-content">
+          <h2 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">Product Management</h2>
+          <div class="table-container">
+            <table id="productsTable">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Price</th>
+                  <th>Category</th>
+                  <th>Stock</th>
+                  <th>Seller</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody">
+                <tr><td colspan="6">Loading products...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Order Management Tab -->
+        <div id="ordersTab" class="admin-tab-content">
+          <h2 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">Order Management</h2>
+          <div class="table-container">
+            <table id="ordersTable">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody">
+                <tr><td colspan="6">Loading orders...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analyticsTab" class="admin-tab-content">
+          <h2 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">Platform Analytics</h2>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem;">
+            <div class="stat-card">
+              <h3>Revenue (This Month)</h3>
+              <div class="value" id="monthlyRevenue">RM 0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Average Order Value</h3>
+              <div class="value" id="avgOrderValue">RM 0</div>
+            </div>
+            <div class="stat-card">
+              <h3>Products per Seller</h3>
+              <div class="value" id="productsPerSeller">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settingsTab" class="admin-tab-content">
+          <h2 style="font-family:'Playfair Display',serif; margin-bottom:1.5rem;">System Settings</h2>
+          <div class="stat-card">
+            <h3>Platform Status</h3>
+            <p style="color:#10b981; font-weight:600;">✓ System Online</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    © 2025 Borneology – Admin Dashboard
+  </footer>
+
+  <script src="app-backend.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Wait for DOM to be fully loaded before executing
+    document.addEventListener('DOMContentLoaded', function() {
+      // Toast notification system - check if already exists
+      let toastElement = document.getElementById("toast-notification");
+      if (!toastElement) {
+        toastElement = document.createElement("div");
+        toastElement.id = "toast-notification";
+        toastElement.className = "toast";
+        document.body.appendChild(toastElement);
+      }
+      const toast = toastElement;
+
+      function showToast(message, type = 'info', duration = 4000) {
+        toast.className = "toast";
+        if (type === 'success') {
+          toast.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95))';
+          toast.style.color = 'white';
+          toast.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+        } else if (type === 'error') {
+          toast.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95))';
+          toast.style.color = 'white';
+          toast.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+        } else if (type === 'warning') {
+          toast.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.95))';
+          toast.style.color = 'white';
+          toast.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+        } else {
+          toast.style.background = 'var(--bg-glass)';
+          toast.style.color = 'var(--tone-dark)';
+          toast.style.borderColor = 'var(--glass-border)';
+        }
+        
+        toast.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 1.2rem;">${type === 'success' ? '✓' : type === 'error' ? '✕' : type === 'warning' ? '⚠' : 'ℹ'}</span>
+            <span>${message}</span>
+          </div>
+        `;
+        toast.classList.add("show");
+        
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, duration);
+      }
+
+      // Make showToast available globally
+      window.showToast = showToast;
+
+      // Require admin login - with debugging
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      const userStr = localStorage.getItem("user") || "{}";
+      let user;
+      try {
+        user = JSON.parse(userStr);
+      } catch (e) {
+        console.error('❌ Failed to parse user data:', e);
+        user = {};
+      }
+      
+      console.log('🔍 Admin Dashboard Check:');
+      console.log('  - isLoggedIn:', isLoggedIn);
+      console.log('  - user object:', user);
+      console.log('  - user.role:', user.role);
+      console.log('  - user string:', userStr);
+      
+      if (!isLoggedIn || isLoggedIn !== "true") {
+        console.log('❌ Not logged in, redirecting to login');
+        showToast("Please login to access admin dashboard", 'warning', 3000);
+        setTimeout(() => {
+          window.location.href = "login.html?redirect=admin-dashboard.html";
+        }, 2000);
+        return; // Stop execution
+      } else if (!user || !user.role || user.role !== "admin") {
+        console.log('❌ Not admin user, role is:', user.role);
+        console.log('❌ Redirecting to home page');
+        showToast("This page is only for administrators. Your role: " + (user.role || 'unknown'), 'error', 4000);
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 3000);
+        return; // Stop execution
+      } else {
+        console.log('✅ Admin user confirmed, loading dashboard');
+        
+        // Force show main content immediately
+        const main = document.querySelector('main');
+        const section = document.querySelector('main section');
+        const container = document.querySelector('.container');
+        if (main) {
+          main.style.display = 'block';
+          main.style.visibility = 'visible';
+          main.style.opacity = '1';
+        }
+        if (section) {
+          section.style.display = 'block';
+          section.style.visibility = 'visible';
+          section.style.opacity = '1';
+        }
+        if (container) {
+          container.style.display = 'block';
+          container.style.visibility = 'visible';
+        }
+        
+        // Ensure tab content is visible
+        const applicationsTab = document.getElementById('applicationsTab');
+        if (applicationsTab) {
+          applicationsTab.classList.add('active');
+          applicationsTab.style.display = 'block';
+          applicationsTab.style.visibility = 'visible';
+        }
+        
+        console.log('✅ Main content should now be visible');
+        console.log('✅ Loading dashboard data...');
+        
+        // Load data after a short delay to ensure DOM is ready
+        setTimeout(() => {
+          if (typeof loadStats === 'function') {
+            loadStats().catch(err => {
+              console.error('❌ Error loading stats:', err);
+              showToast('Failed to load statistics. Please refresh the page.', 'error', 5000);
+            });
+          } else {
+            console.error('❌ loadStats function not found!');
+          }
+          
+          if (typeof loadApplications === 'function') {
+            loadApplications().catch(err => {
+              console.error('❌ Error loading applications:', err);
+              showToast('Failed to load applications. Please refresh the page.', 'error', 5000);
+            });
+          } else {
+            console.error('❌ loadApplications function not found!');
+          }
+        }, 100);
+      }
+
+      // Tab switching - moved inside DOMContentLoaded
+      document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const tabName = tab.dataset.tab;
+          
+          // Update active tab
+          document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          // Update active content
+          document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+          const targetTab = document.getElementById(`${tabName}Tab`);
+          if (targetTab) {
+            targetTab.classList.add('active');
+          }
+          
+          // Load data for active tab
+          if (tabName === 'users' && typeof loadUsers === 'function') {
+            loadUsers();
+          } else if (tabName === 'products' && typeof loadProducts === 'function') {
+            loadProducts();
+          } else if (tabName === 'orders' && typeof loadOrders === 'function') {
+            loadOrders();
+          } else if (tabName === 'analytics' && typeof loadAnalytics === 'function') {
+            loadAnalytics();
+          }
+        });
+      });
+    }); // End of DOMContentLoaded
+
+    // Define all functions in global scope BEFORE they're called
+    // Load statistics
+    async function loadStats() {
+      try {
+        const [usersRes, productsRes, ordersRes, appsRes] = await Promise.all([
+          fetch('/api/admin/users'),
+          fetch('/api/products'),
+          fetch('/api/admin/orders'),
+          fetch('/api/admin/seller-applications')
+        ]);
+        
+        const users = await usersRes.json();
+        const products = await productsRes.json();
+        const orders = await ordersRes.json();
+        const applications = await appsRes.json();
+        
+        const pendingCount = applications.filter(a => a.status === 'pending').length || 0;
+        const totalUsers = users.length || 0;
+        const totalProducts = products.length || 0;
+        const totalOrders = orders.length || 0;
+        const verifiedSellers = users.filter(u => u.isVerifiedSeller).length || 0;
+        
+        // Update stats
+        document.getElementById('totalUsers').textContent = totalUsers;
+        document.getElementById('totalProducts').textContent = totalProducts;
+        document.getElementById('totalOrders').textContent = totalOrders;
+        document.getElementById('pendingVerifications').textContent = pendingCount;
+        document.getElementById('verifiedSellers').textContent = verifiedSellers;
+        
+        // Update quick action counts
+        document.getElementById('quickVerificationCount').textContent = `${pendingCount} pending`;
+        document.getElementById('quickUserCount').textContent = `${totalUsers} total`;
+        document.getElementById('quickProductCount').textContent = `${totalProducts} total`;
+        document.getElementById('quickOrderCount').textContent = `${totalOrders} total`;
+        
+        // Show/hide pending verifications alert
+        const alertDiv = document.getElementById('pendingVerificationsAlert');
+        const cardDiv = document.getElementById('pendingVerificationsCard');
+        if (pendingCount > 0) {
+          alertDiv.style.display = 'block';
+          document.getElementById('pendingCountBadge').textContent = pendingCount;
+          document.getElementById('pendingVerificationsSubtext').textContent = `${pendingCount} awaiting review`;
+          cardDiv.style.animation = 'highlight 3s infinite';
+        } else {
+          alertDiv.style.display = 'none';
+          cardDiv.style.animation = 'none';
+          document.getElementById('pendingVerificationsSubtext').textContent = 'All reviewed';
+        }
+        
+        // Update badge on applications tab
+        const badge = document.getElementById('applicationsBadge');
+        if (pendingCount > 0) {
+          badge.style.display = 'flex';
+          badge.textContent = pendingCount > 99 ? '99+' : pendingCount;
+        } else {
+          badge.style.display = 'none';
+        }
+      } catch (error) {
+        console.error('Failed to load stats:', error);
+      }
+    }
+    
+    // Quick action button handlers
+    document.querySelectorAll('.quick-action-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        // Find and click corresponding tab
+        const tab = document.querySelector(`[data-tab="${action}"]`);
+        if (tab) {
+          tab.click();
+        }
+      });
+    });
+    
+    // Go to verifications button
+    document.getElementById('gotoVerificationsBtn')?.addEventListener('click', () => {
+      const tab = document.querySelector('[data-tab="applications"]');
+      if (tab) {
+        tab.click();
+        // Scroll to applications section
+        setTimeout(() => {
+          document.getElementById('applicationsTab')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    });
+    
+    // Export data function
+    function exportData() {
+      showToast('Exporting data... This feature will be implemented soon.', 'info', 3000);
+      // TODO: Implement export functionality
+    }
+
+    // Load applications
+    async function loadApplications() {
+      const applicationsList = document.getElementById('applicationsList');
+      applicationsList.innerHTML = '<p style="color:var(--text-muted);">Loading applications...</p>';
+
+      try {
+        console.log('📋 Loading seller applications...');
+        const response = await fetch('/api/admin/seller-applications?status=all'); // Get all applications
+        console.log('📋 Response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const applications = await response.json();
+        console.log('📋 Received applications:', applications.length, applications);
+
+        // Filter by status for display (default show pending, but allow toggling)
+        const statusFilter = document.getElementById('statusFilter')?.value || 'pending';
+        let filteredApps = applications;
+        if (statusFilter !== 'all') {
+          filteredApps = applications.filter(app => app.status === statusFilter);
+        }
+
+        if (filteredApps.length === 0) {
+          applicationsList.innerHTML = `
+            <div style="text-align:center; padding:3rem;">
+              <div style="font-size:3rem; margin-bottom:1rem;">📋</div>
+              <p style="color:var(--text-muted); font-size:1.1rem; margin-bottom:0.5rem;">No ${statusFilter === 'all' ? '' : statusFilter} applications at the moment.</p>
+              <p style="color:var(--text-muted); font-size:0.9rem;">Applications will appear here when sellers submit their verification documents.</p>
+            </div>
+          `;
+          return;
+        }
+
+        console.log('📋 Filtered applications:', filteredApps.length, filteredApps);
+        applicationsList.innerHTML = filteredApps.map(app => {
+          // Format submitted date
+          let submittedDate = 'N/A';
+          if (app.submittedAt) {
+            try {
+              const date = app.submittedAt instanceof Date ? app.submittedAt : (app.submittedAt.toDate ? app.submittedAt.toDate() : new Date(app.submittedAt));
+              submittedDate = date.toLocaleString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+              });
+            } catch (e) {
+              submittedDate = 'Invalid date';
+            }
+          }
+          
+          return `
+          <div class="application-card" style="border-left:4px solid ${app.status === 'pending' ? '#f59e0b' : app.status === 'approved' ? '#10b981' : '#ef4444'};">
+            <h3 style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+              <span>${app.userName || 'Unknown User'}</span>
+              <span class="status-badge status-${app.status}">${app.status.toUpperCase()}</span>
+            </h3>
+            <div style="color:var(--text-muted); margin:1rem 0; line-height:1.8;">
+              <div><strong>📧 Email:</strong> ${app.userEmail || 'No email'}</div>
+              <div><strong>🆔 User ID:</strong> <code style="background:rgba(0,0,0,0.05); padding:0.2rem 0.4rem; border-radius:4px; font-size:0.85rem;">${app.userId}</code></div>
+              <div><strong>📅 Submitted:</strong> ${submittedDate}</div>
+              ${app.reviewedAt ? `<div><strong>✅ Reviewed:</strong> ${new Date(app.reviewedAt.toDate ? app.reviewedAt.toDate() : app.reviewedAt).toLocaleString()}</div>` : ''}
+              ${app.reviewedBy ? `<div><strong>👤 Reviewed by:</strong> ${app.reviewedBy}</div>` : ''}
+            </div>
+            <div class="document-list" style="margin:1rem 0;">
+              <strong style="display:block; margin-bottom:0.5rem;">📎 Documents:</strong>
+              ${app.documents?.businessLicense ? `<a href="${app.documents.businessLicense}" target="_blank" style="margin:0.25rem;">📄 Business License</a>` : '<span style="color:#ef4444;">❌ Missing</span>'}
+              ${app.documents?.identityDocument ? `<a href="${app.documents.identityDocument}" target="_blank" style="margin:0.25rem;">🆔 Identity Document</a>` : '<span style="color:#ef4444;">❌ Missing</span>'}
+              ${app.documents?.taxDocument ? `<a href="${app.documents.taxDocument}" target="_blank" style="margin:0.25rem;">📋 Tax Document</a>` : '<span style="color:#ef4444;">❌ Missing</span>'}
+              ${app.documents?.portfolio ? `<a href="${app.documents.portfolio}" target="_blank" style="margin:0.25rem;">🎨 Portfolio</a>` : '<span style="color:#ef4444;">❌ Missing</span>'}
+              ${app.documents?.additionalDocument ? `<a href="${app.documents.additionalDocument}" target="_blank" style="margin:0.25rem;">📎 Additional</a>` : ''}
+            </div>
+            ${app.status === 'pending' ? `
+            <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid rgba(0,0,0,0.1); display:flex; gap:1rem;">
+              <button class="btn btn-primary" onclick="reviewApplication('${app.id}', 'approve')" style="flex:1;">✓ Approve</button>
+              <button class="btn btn-outline" onclick="reviewApplication('${app.id}', 'reject')" style="flex:1; border-color:#ef4444; color:#ef4444;">✗ Reject</button>
+            </div>
+            ` : app.status === 'approved' ? `
+            <div style="margin-top:1rem; padding:1rem; background:rgba(16,185,129,0.1); border-radius:8px; color:#065f46;">
+              ✓ This application was approved. The seller is now verified.
+            </div>
+            ` : app.status === 'rejected' ? `
+            <div style="margin-top:1rem; padding:1rem; background:rgba(239,68,68,0.1); border-radius:8px; color:#991b1b;">
+              ✗ This application was rejected.
+            </div>
+            ` : ''}
+          </div>
+        `;
+        }).join('');
+        
+        console.log('✅ Applications displayed:', filteredApps.length);
+      } catch (error) {
+        console.error('❌ Failed to load applications:', error);
+        console.error('Error details:', error.message, error.stack);
+        applicationsList.innerHTML = `
+          <div style="text-align:center; padding:2rem; background:rgba(239,68,68,0.1); border-radius:12px; color:#991b1b;">
+            <p style="font-weight:600; margin-bottom:0.5rem;">❌ Failed to load applications</p>
+            <p style="font-size:0.9rem;">Error: ${error.message || 'Unknown error'}</p>
+            <button class="btn btn-primary" onclick="loadApplications()" style="margin-top:1rem;">🔄 Retry</button>
+          </div>
+        `;
+      }
+    }
+
+    // Load users
+    async function loadUsers() {
+      const tbody = document.getElementById('usersTableBody');
+      tbody.innerHTML = '<tr><td colspan="6">Loading users...</td></tr>';
+      
+      try {
+        const response = await fetch('/api/admin/users');
+        const users = await response.json();
+        
+        if (users.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6">No users found.</td></tr>';
+          return;
+        }
+        
+        tbody.innerHTML = users.map(user => `
+          <tr>
+            <td>${user.name || 'N/A'}</td>
+            <td>${user.email || 'N/A'}</td>
+            <td><span style="background:${user.role === 'admin' ? '#ef4444' : user.role === 'seller' ? '#10b981' : '#3b82f6'}; color:white; padding:0.25rem 0.75rem; border-radius:999px; font-size:0.85rem;">${user.role || 'buyer'}</span></td>
+            <td>${user.isVerifiedSeller ? '✓ Yes' : '✗ No'}</td>
+            <td>${user.createdAt ? new Date(user.createdAt.toDate ? user.createdAt.toDate() : user.createdAt).toLocaleDateString() : 'N/A'}</td>
+            <td>
+              ${user.role !== 'admin' ? `<button class="action-btn btn-delete" onclick="deleteUser('${user.id}')">Delete</button>` : '<span style="color:var(--text-muted);">Protected</span>'}
+            </td>
+          </tr>
+        `).join('');
+      } catch (error) {
+        console.error('Failed to load users:', error);
+        tbody.innerHTML = '<tr><td colspan="6">Failed to load users.</td></tr>';
+      }
+    }
+
+    // Load products
+    async function loadProducts() {
+      const tbody = document.getElementById('productsTableBody');
+      tbody.innerHTML = '<tr><td colspan="6">Loading products...</td></tr>';
+      
+      try {
+        const products = await window.API.getProducts();
+        const users = await fetch('/api/admin/users').then(r => r.json());
+        
+        if (products.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6">No products found.</td></tr>';
+          return;
+        }
+        
+        tbody.innerHTML = products.map(product => {
+          const seller = users.find(u => u.id === product.sellerId);
+          return `
+            <tr>
+              <td>${product.name || 'N/A'}</td>
+              <td>RM ${(product.price || 0).toFixed(2)}</td>
+              <td>${product.category || 'N/A'}</td>
+              <td>${product.stock || 0}</td>
+              <td>${seller ? seller.name : 'N/A'}</td>
+              <td>
+                <button class="action-btn btn-delete" onclick="deleteProduct('${product.id}')">Delete</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Failed to load products:', error);
+        tbody.innerHTML = '<tr><td colspan="6">Failed to load products.</td></tr>';
+      }
+    }
+
+    // Load orders
+    async function loadOrders() {
+      const tbody = document.getElementById('ordersTableBody');
+      tbody.innerHTML = '<tr><td colspan="6">Loading orders...</td></tr>';
+      
+      try {
+        const orders = await fetch('/api/admin/orders').then(r => r.json());
+        const users = await fetch('/api/admin/users').then(r => r.json());
+        
+        if (orders.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6">No orders found.</td></tr>';
+          return;
+        }
+        
+        tbody.innerHTML = orders.map(order => {
+          const customer = users.find(u => u.id === order.userId);
+          return `
+            <tr>
+              <td>${order.orderId || order.id}</td>
+              <td>${customer ? customer.name : 'N/A'}</td>
+              <td>RM ${(order.total || 0).toFixed(2)}</td>
+              <td><span class="status-badge status-${order.status || 'pending'}">${(order.status || 'pending').toUpperCase()}</span></td>
+              <td>${order.createdAt ? new Date(order.createdAt.toDate ? order.createdAt.toDate() : order.createdAt).toLocaleDateString() : 'N/A'}</td>
+              <td>
+                <button class="action-btn btn-approve" onclick="updateOrderStatus('${order.orderId || order.id}', 'processing')">Process</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Failed to load orders:', error);
+        tbody.innerHTML = '<tr><td colspan="6">Failed to load orders.</td></tr>';
+      }
+    }
+
+    // Load analytics
+    async function loadAnalytics() {
+      try {
+        const orders = await fetch('/api/admin/orders').then(r => r.json());
+        const products = await window.API.getProducts();
+        const users = await fetch('/api/admin/users').then(r => r.json());
+        
+        const sellers = users.filter(u => u.isVerifiedSeller);
+        const thisMonth = new Date();
+        thisMonth.setDate(1);
+        const monthlyOrders = orders.filter(o => {
+          const orderDate = o.createdAt ? (o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt)) : new Date(0);
+          return orderDate >= thisMonth;
+        });
+        const monthlyRevenue = monthlyOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+        const avgOrderValue = orders.length > 0 ? orders.reduce((sum, o) => sum + (o.total || 0), 0) / orders.length : 0;
+        const productsPerSeller = sellers.length > 0 ? products.length / sellers.length : 0;
+        
+        document.getElementById('monthlyRevenue').textContent = `RM ${monthlyRevenue.toFixed(2)}`;
+        document.getElementById('avgOrderValue').textContent = `RM ${avgOrderValue.toFixed(2)}`;
+        document.getElementById('productsPerSeller').textContent = productsPerSeller.toFixed(1);
+      } catch (error) {
+        console.error('Failed to load analytics:', error);
+      }
+    }
+
+    // Review application
+    window.reviewApplication = async function(applicationId, action) {
+      if (!confirm(`Are you sure you want to ${action} this application?`)) {
+        return;
+      }
+
+      const adminUserId = localStorage.getItem('userId');
+      if (!adminUserId) {
+        showToast("Admin user ID not found");
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/admin/seller-applications/${applicationId}/review`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action, adminUserId })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showToast(`Application ${action}d successfully!`);
+          loadApplications();
+          loadStats();
+        } else {
+          showToast(result.error || `Failed to ${action} application`);
+        }
+      } catch (error) {
+        console.error('Review error:', error);
+        showToast(`Failed to ${action} application. Please try again.`);
+      }
+    };
+
+    // Delete user
+    window.deleteUser = async function(userId) {
+      if (!confirm('Are you sure you want to delete this user?')) return;
+      
+      try {
+        const response = await fetch(`/api/admin/users/${userId}`, { method: 'DELETE' });
+        const result = await response.json();
+        if (result.success) {
+          showToast('User deleted successfully');
+          loadUsers();
+          loadStats();
+        } else {
+          showToast(result.error || 'Failed to delete user');
+        }
+      } catch (error) {
+        console.error('Delete user error:', error);
+        showToast('Failed to delete user');
+      }
+    };
+
+    // Delete product
+    window.deleteProduct = async function(productId) {
+      if (!confirm('Are you sure you want to delete this product?')) return;
+      
+      try {
+        await window.API.deleteProduct(productId);
+        showToast('Product deleted successfully');
+        loadProducts();
+        loadStats();
+      } catch (error) {
+        console.error('Delete product error:', error);
+        showToast('Failed to delete product');
+      }
+    };
+
+    // Update order status
+    window.updateOrderStatus = async function(orderId, status) {
+      try {
+        const response = await fetch(`/api/orders/${orderId}/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        const result = await response.json();
+        if (result.success) {
+          showToast('Order status updated');
+          loadOrders();
+        } else {
+          showToast('Failed to update order status');
+        }
+      } catch (error) {
+        console.error('Update order status error:', error);
+        showToast('Failed to update order status');
+      }
+    };
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Admin Access</title>
+</head>
+<body>
+  <h1>Admin Access Test</h1>
+  <div id="info"></div>
+  <script>
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const userStr = localStorage.getItem("user") || "{}";
+    const user = JSON.parse(userStr);
+    
+    const info = document.getElementById('info');
+    info.innerHTML = `
+      <h2>Login Status:</h2>
+      <p>isLoggedIn: <strong>${isLoggedIn}</strong></p>
+      <p>User Object: <pre>${JSON.stringify(user, null, 2)}</pre></p>
+      <p>User Role: <strong>${user.role || 'NOT SET'}</strong></p>
+      <p>Is Admin: <strong>${user.role === 'admin' ? 'YES ✅' : 'NO ❌'}</strong></p>
+      
+      <h2>Actions:</h2>
+      <button onclick="window.location.href='admin-dashboard.html'">Go to Admin Dashboard</button>
+      <button onclick="window.location.href='login.html'">Go to Login</button>
+      <button onclick="localStorage.clear(); location.reload();">Clear Storage & Reload</button>
+    `;
+  </script>
+</body>
+</html>
+
