@@ -62,26 +62,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 console.log('Setting up static file serving from:', baseDir);
 console.log('process.cwd():', process.cwd());
 console.log('__dirname:', __dirname);
+console.log('VERCEL env:', process.env.VERCEL);
 
-app.use(express.static(baseDir, {
-  index: false,
-  dotfiles: 'ignore',
-  etag: true,
-  lastModified: true,
-  maxAge: '1d'
-}));
+// For Vercel, try multiple paths
+const staticPaths = process.env.VERCEL ? [
+  process.cwd(),
+  path.join(process.cwd(), '..'),
+  __dirname
+] : [baseDir];
 
-// For Vercel, also serve from process.cwd() if different
-if (process.env.VERCEL && baseDir !== process.cwd()) {
-  console.log('Also serving static files from process.cwd():', process.cwd());
-  app.use(express.static(process.cwd(), {
+staticPaths.forEach((staticPath, index) => {
+  console.log(`Setting up static path ${index + 1}:`, staticPath);
+  app.use(express.static(staticPath, {
     index: false,
     dotfiles: 'ignore',
     etag: true,
     lastModified: true,
     maxAge: '1d'
   }));
-}
+});
 
 // Serve uploaded files
 app.use('/uploads', express.static(uploadsDir, {

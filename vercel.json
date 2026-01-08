@@ -10,10 +10,6 @@
       "dest": "api/index.js"
     },
     {
-      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json|xml|txt|html))",
-      "dest": "/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "api/index.js"
     }
